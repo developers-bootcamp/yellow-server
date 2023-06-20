@@ -1,12 +1,14 @@
 package com.yellow.ordermanageryellow.model;
-
 import org.springframework.core.annotation.Order;
 import org.springframework.data.mongodb.core.annotation.Collation;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.util.List;
-@Collation
+
+@Document(collection = "Orders")
+
 public class Orders {
     private String id;
     private Users employee;
