@@ -8,13 +8,18 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.annotation.Collation;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Collation
+@Document(collection = "Users")
+
 public class Users {
+    public Users(String id){
+        this.id =id;
+    }
     @Id
 private String id;
 private String fullName;
