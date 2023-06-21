@@ -16,6 +16,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Document(collection = "Company")
 public class Company {
+
+    public Company(String id){
+        this.id=id;
+    }
     @Id
     private String id;
     private String name;

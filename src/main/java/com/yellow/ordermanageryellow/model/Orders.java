@@ -25,4 +25,7 @@ public class Orders {
     @DBRef
     private AuditData auditData;
 
+    public Orders(String id) {
+        this.id = id;
+    }
 }

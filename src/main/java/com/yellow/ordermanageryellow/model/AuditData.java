@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "AuditData")
 
 public class AuditData {
     private LocalDate createDate;

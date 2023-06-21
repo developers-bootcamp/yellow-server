@@ -12,11 +12,16 @@ enum Discount{
 
 public class Product {
     private String id;
+
+    public Product(String id) {
+        this.id = id;
+    }
+
     private String name;
     private String desc;
     private double price;
     private Discount discount;
-    private Product_Category categoryId;
+    private ProductCategory categoryId;
     private int inventory;
     private Company companyId;
     @DBRef

@@ -14,10 +14,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Document(collection = "ProductCategory")
 
-@Document(collection = "Product_Category")
+public class ProductCategory {
+    public ProductCategory(String id) {
+        this.id = id;
+    }
 
-public class Product_Category {
     @Id
     private String id;
     private String name;
