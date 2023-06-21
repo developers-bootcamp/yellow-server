@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 @Collation
 public class Orders {
-    private String id;
+    private String id_test2;
     private Users employee;
     private Users customer;
     private double totalAmount;
