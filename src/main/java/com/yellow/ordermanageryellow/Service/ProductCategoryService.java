@@ -4,7 +4,10 @@ import com.yellow.ordermanageryellow.model.ProductCategory;
 import com.yellow.ordermanageryellow.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import java.util.List;
 
 @Service
 public class ProductCategoryService implements CommandLineRunner {
@@ -18,4 +21,7 @@ public class ProductCategoryService implements CommandLineRunner {
         ProductCategory ProductCategory = new ProductCategory("12");
         ProductCategoryRepository.save(ProductCategory);
     }
+    public ResponseEntity<List<ProductCategory>> findAll(){
+        List<ProductCategory> categories = this.ProductCategoryRepository.findAll();
+        return new ResponseEntity<>(categories, HttpStatus.OK);    }
 }
