@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/actions")
+@RequestMapping("/Uesr")
 public class UserController {
 
     private final UsersService usersService;
@@ -25,5 +25,7 @@ public class UserController {
 
         return usersService.login(email,password);
     }
+
+
 
 }
