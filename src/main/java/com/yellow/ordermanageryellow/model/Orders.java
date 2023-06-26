@@ -10,7 +10,7 @@ import java.util.List;
 @Document(collection = "Orders")
 
 public class Orders {
-    private String id_test2;
+    private String id;
     private Users employee;
     private Users customer;
     private double totalAmount;
