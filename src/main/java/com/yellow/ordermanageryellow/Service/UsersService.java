@@ -23,11 +23,11 @@ public class UsersService implements CommandLineRunner {
         Users user=UserRepository.findUserByEmail(email);
     if(user==null){
     return new ResponseEntity<>("user not found", HttpStatus.NOT_FOUND);}
-    if (user.getPassword().equals(password))
+    if (user.getPassword()!=null)
+        if(user.getPassword().equals(password))
            return new ResponseEntity<>(generateToken(user), HttpStatus.OK);
-    else if(!user.getPassword().equals(password))
-        return new ResponseEntity<>("wrong password",HttpStatus.UNAUTHORIZED);
-
+        else
+            return new ResponseEntity<>("wrong password",HttpStatus.UNAUTHORIZED);
     else
         return new ResponseEntity<>("unexpected error",HttpStatus.INTERNAL_SERVER_ERROR);
 }
