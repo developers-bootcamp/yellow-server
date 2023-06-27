@@ -1,13 +1,9 @@
 package com.yellow.ordermanageryellow.controller;
 
-import com.yellow.ordermanageryellow.DTO.LoginRequest;
 import com.yellow.ordermanageryellow.Service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/User")
@@ -18,11 +14,8 @@ public class UserController {
     public UserController(UsersService usersService){
         this.usersService=usersService;
     }
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest){
-        String password=loginRequest.getPassword();
-        String email=loginRequest.getEmail();
-
+    @GetMapping("/login")
+    public ResponseEntity<String> login(@RequestParam  String password, @RequestParam String email){
         return usersService.login(email,password);
     }
 
