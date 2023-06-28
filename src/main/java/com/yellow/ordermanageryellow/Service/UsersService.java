@@ -20,16 +20,19 @@ public class UsersService implements CommandLineRunner {
         UserRepository.save(myModel);
     }
     public  ResponseEntity<String> login(String email,String password){
-        Users user=UserRepository.findUserByEmail(email);
-    if(user==null){
-    return new ResponseEntity<>("user not found", HttpStatus.NOT_FOUND);}
-    if (user.getPassword()!=null)
-        if(user.getPassword().equals(password))
-           return new ResponseEntity<>(generateToken(user), HttpStatus.OK);
-        else
-            return new ResponseEntity<>("wrong password",HttpStatus.UNAUTHORIZED);
-    else
-        return new ResponseEntity<>("unexpected error",HttpStatus.INTERNAL_SERVER_ERROR);
+      try {
+          Users user = UserRepository.findUserByEmail(email);
+          if (user == null) {
+              return new ResponseEntity<>("user not found", HttpStatus.NOT_FOUND);
+          }
+              if (user.getPassword().equals(password))
+                  return new ResponseEntity<>(generateToken(user), HttpStatus.OK);
+              else
+                  return new ResponseEntity<>("wrong password", HttpStatus.UNAUTHORIZED);
+      }
+    catch (Exception e) {
+        return new ResponseEntity<>("unexpected error ", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
     public String generateToken(Users user){
         return user.getCompanyId() + user.getId()+ user.getRoleId();
