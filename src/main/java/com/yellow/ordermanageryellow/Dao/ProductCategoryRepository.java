@@ -4,6 +4,7 @@ import com.yellow.ordermanageryellow.model.ProductCategory;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductCategoryRepository extends MongoRepository<ProductCategory, String> {
     List<ProductCategory> findAll();
@@ -12,8 +13,8 @@ public interface ProductCategoryRepository extends MongoRepository<ProductCatego
     void deleteById(String categoryId);
 
     // Edit
-    ProductCategory update(ProductCategory productCategory);
+    //ProductCategory update(ProductCategory productCategory);
 
     // Retrieve all
-
+    Optional<ProductCategory> findById(String id);
 }
