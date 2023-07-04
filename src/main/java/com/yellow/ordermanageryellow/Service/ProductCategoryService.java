@@ -1,12 +1,8 @@
 package com.yellow.ordermanageryellow.Service;
 import com.yellow.ordermanageryellow.Dao.ProductCategoryRepository;
 import com.yellow.ordermanageryellow.model.ProductCategory;
-import com.yellow.ordermanageryellow.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.http.HttpStatus;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,45 +13,64 @@ public class ProductCategoryService  {
     public ProductCategoryService(ProductCategoryRepository ProductCategoryRepository) {
         this.ProductCategoryRepository = ProductCategoryRepository;
     }
-    //@Override
-    //public void run(String... args) {
-       // ProductCategory ProductCategory = new ProductCategory("12");
-    //  ProductCategoryRepository.save(ProductCategory);
-   // }
-    public ResponseEntity<List<ProductCategory>> findAll(){
-        List<ProductCategory> categories = this.ProductCategoryRepository.findAll();
-        return new ResponseEntity<>(categories, HttpStatus.OK);    }
+    public Optional<ProductCategory> findById(String id){
+        try {
+           return this.ProductCategoryRepository.findById(id);
+        }
+        catch (Exception ex){
+            throw new RuntimeException(ex.getMessage());        }
+    }
 
-    public ResponseEntity<String> insert(ProductCategory newCategory) {
+    public List<ProductCategory> findAll(){
+        try {
+            return this.ProductCategoryRepository.findAll();
+        }
+        catch (Exception ex){
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
+    public ProductCategory insert(ProductCategory newCategory) {
         try{
-            ProductCategory savedCategory = this.ProductCategoryRepository.save(newCategory);
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return this.ProductCategoryRepository.save(newCategory);
+        }catch (Exception ex){
+            throw new RuntimeException(ex.getMessage());
         }
 
-        return new ResponseEntity<>("savedCategory", HttpStatus.OK);
     }
-    public ResponseEntity<String> delete(String categoryId) {
-        Optional<ProductCategory> optionalCategory = this.ProductCategoryRepository.findById(categoryId);
+    public Boolean delete(String categoryId) {
+        Optional<ProductCategory> optionalCategory;
+        try{
+            optionalCategory  = this.ProductCategoryRepository.findById(categoryId);
+        }
+        catch (Exception ex){
+            throw new RuntimeException(ex.getMessage());
+        }
         if (optionalCategory.isPresent()) {
-            this.ProductCategoryRepository.deleteById(categoryId);
-            return new ResponseEntity<>("Category deleted successfully", HttpStatus.OK);
+            try{
+                this.ProductCategoryRepository.deleteById(categoryId);
+                return true;
+            }
+            catch (Exception ex){
+                throw new RuntimeException(ex.getMessage());
+            }
         } else {
-            return new ResponseEntity<>("Category not found", HttpStatus.NOT_FOUND);
+            return false;
         }
     }
-     public ResponseEntity<ProductCategory> update(ProductCategory updateCategory){
 
-        ProductCategory UpdateCategory = this.ProductCategoryRepository.save(updateCategory);
 
-        if(UpdateCategory!=null){
-            return new ResponseEntity<>(updateCategory,HttpStatus.OK);
-        }
-        else{
-            return new ResponseEntity<> (null, HttpStatus.NOT_FOUND);
+    public ProductCategory update(ProductCategory updateCategory){
+        try {
+            String id= updateCategory.getId();
+            Optional<ProductCategory> Category =this.findById(id);
+            if (Category.isPresent()) {
+                return this.ProductCategoryRepository.save(updateCategory);
+            }
+            else{
+                return null;
+            }}
+            catch (Exception ex){
+                throw new RuntimeException(ex.getMessage());
         }
      }
-
-
 }

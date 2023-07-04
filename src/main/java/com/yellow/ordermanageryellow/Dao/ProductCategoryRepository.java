@@ -7,14 +7,4 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductCategoryRepository extends MongoRepository<ProductCategory, String> {
-    List<ProductCategory> findAll();
-    ProductCategory save(ProductCategory productCategory);
-    // Delete
-    void deleteById(String categoryId);
-
-    // Edit
-    //ProductCategory update(ProductCategory productCategory);
-
-    // Retrieve all
-    Optional<ProductCategory> findById(String id);
 }
