@@ -18,14 +18,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 public class ProductCategory {
     public ProductCategory(String id) {
-        this.id = id;
+        this.Id = id;
     }
 
     @Id
-    private String id;
-    private String name;
-    private String desc;
-    private Company companyId;
+    private String Id;
+    private String Name;
+    private String Desc;
+    private Company CompanyId;
     @DBRef
-    private AuditData auditData;
+    private AuditData AuditData;
 }

@@ -1,13 +1,16 @@
 package com.yellow.ordermanageryellow.api;
+import Exceptions.ObjectAlreadyExistException;
 import com.yellow.ordermanageryellow.Service.ProductCategoryService;
 import com.yellow.ordermanageryellow.model.ProductCategory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/categories")
@@ -21,42 +24,58 @@ public class ProductCategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductCategory>> getAllCategories() {
+    public ResponseEntity getAllCategories() {
         List<ProductCategory> categories;
-        categories= productCategoryService.findAll();
-        if(!categories.isEmpty()){
+        try{
+            categories= productCategoryService.findAll();
             return new ResponseEntity<>(categories, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        catch (Exception ex){
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @PostMapping
-    public ResponseEntity<ProductCategory> createCategory(@RequestBody ProductCategory newCategory) {
-        ProductCategory createdCategory =productCategoryService.insert(newCategory);
-        if(createdCategory!=null)
-        return new ResponseEntity<>(createdCategory, HttpStatus.OK);
-        else
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    @PostMapping("/{name}/{description}")
+    public ResponseEntity createCategory(@PathVariable String name,@PathVariable String description) {
+        ProductCategory createdCategory;
+        try{
+            createdCategory=productCategoryService.insert(name,description);
+            return new ResponseEntity<>(createdCategory, HttpStatus.OK);
+        }
+        catch (ObjectAlreadyExistException ex){
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+        catch (Exception ex){
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/{categoryId}")
-
-    public ResponseEntity<Boolean> deleteCategory(@PathVariable String categoryId) {
-        Boolean DeleteMassage= productCategoryService.delete(categoryId);
-        if(DeleteMassage)
-        {
-            return new ResponseEntity<Boolean>((true), HttpStatus.OK);
+    public ResponseEntity deleteCategory (@PathVariable String categoryId) {
+       try {
+           productCategoryService.delete(categoryId);
+           return new ResponseEntity(HttpStatus.OK);
+       }
+        catch(EmptyResultDataAccessException ex){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Boolean>((false),HttpStatus.NOT_FOUND);
-
+       catch (Exception ex){
+           return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+       }
     }
 
-    @PutMapping
-    public ResponseEntity<ProductCategory> updateCategory(@RequestBody ProductCategory updateCategory) {
-        ProductCategory  updateItem=productCategoryService.update(updateCategory);
-        if (updateItem  !=null){
-            return new ResponseEntity<>(updateItem,HttpStatus.OK);
+    @PutMapping("/{categoryId}/{name}/{description}")
+    public ResponseEntity updateCategory(@PathVariable String categoryId,@PathVariable String name, @PathVariable String description) {
+        try{
+            ProductCategory updateItem=productCategoryService.update(categoryId,name,description);
+            return new ResponseEntity(updateItem,HttpStatus.OK);
         }
-        return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        catch (EmptyResultDataAccessException ex){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        catch (Exception ex){
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }
