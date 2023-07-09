@@ -1,12 +1,10 @@
 package com.yellow.ordermanageryellow.model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.annotation.Collation;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -18,14 +16,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 public class ProductCategory {
     public ProductCategory(String id) {
-        this.Id = id;
+        this._id = id;
     }
-
     @Id
-    private String Id;
-    private String Name;
-    private String Desc;
-    private Company CompanyId;
+    private String _id;
+    private String name;
+    private String desc;
     @DBRef
-    private AuditData AuditData;
+    private Company CompanyId;
 }

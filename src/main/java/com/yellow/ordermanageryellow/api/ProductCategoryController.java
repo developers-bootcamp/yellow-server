@@ -35,11 +35,11 @@ public class ProductCategoryController {
         }
     }
 
-    @PostMapping("/{name}/{description}")
-    public ResponseEntity createCategory(@PathVariable String name,@PathVariable String description) {
+    @PostMapping
+    public ResponseEntity createCategory(@RequestBody ProductCategory newCategory) {
         ProductCategory createdCategory;
         try{
-            createdCategory=productCategoryService.insert(name,description);
+            createdCategory = productCategoryService.insert(newCategory);
             return new ResponseEntity<>(createdCategory, HttpStatus.OK);
         }
         catch (ObjectAlreadyExistException ex){
@@ -51,7 +51,7 @@ public class ProductCategoryController {
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity deleteCategory (@PathVariable String categoryId) {
+    public ResponseEntity deleteCategory(@PathVariable String categoryId) {
        try {
            productCategoryService.delete(categoryId);
            return new ResponseEntity(HttpStatus.OK);
@@ -63,19 +63,17 @@ public class ProductCategoryController {
            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
        }
     }
-
-    @PutMapping("/{categoryId}/{name}/{description}")
-    public ResponseEntity updateCategory(@PathVariable String categoryId,@PathVariable String name, @PathVariable String description) {
+    @PutMapping
+    public ResponseEntity<?> updateCategory(@RequestBody ProductCategory updatedCategory) {
         try{
-            ProductCategory updateItem=productCategoryService.update(categoryId,name,description);
-            return new ResponseEntity(updateItem,HttpStatus.OK);
+            ProductCategory updateItem=productCategoryService.update(updatedCategory);
+            return ResponseEntity.ok(updateItem);
         }
-        catch (EmptyResultDataAccessException ex){
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        catch (NoSuchElementException ex){
+            return new ResponseEntity(null,HttpStatus.NOT_FOUND);
         }
         catch (Exception ex){
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 }

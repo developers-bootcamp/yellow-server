@@ -3,42 +3,36 @@ import Exceptions.ObjectAlreadyExistException;
 import com.yellow.ordermanageryellow.Dao.ProductCategoryRepository;
 import com.yellow.ordermanageryellow.model.ProductCategory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 public class ProductCategoryService  {
-    private final ProductCategoryRepository ProductCategoryRepository;
+    private final ProductCategoryRepository productCategoryRepository;
     @Autowired
     public ProductCategoryService(ProductCategoryRepository ProductCategoryRepository) {
-        this.ProductCategoryRepository = ProductCategoryRepository;
+        this.productCategoryRepository = ProductCategoryRepository;
+    }
+    public List<ProductCategory> findAll(){
+            return this.productCategoryRepository.findAll();
+    }
+    public ProductCategory insert(ProductCategory newCategory) throws ObjectAlreadyExistException {
+        if(this.productCategoryRepository.existsByname(newCategory.getName()))
+            throw new ObjectAlreadyExistException("category name already exist");
+        return this.productCategoryRepository.save(newCategory);
     }
 
-    public List<ProductCategory> findAll(){
-            return this.ProductCategoryRepository.findAll();
-    }
-    public ProductCategory insert(String name, String description) {
-        if(this.ProductCategoryRepository.existsByName((name))==true)
-            throw new ObjectAlreadyExistException("category name already exist");
-        ProductCategory newCategory= new ProductCategory();
-        newCategory.setName(name);
-        newCategory.setDesc(description);
-        return this.ProductCategoryRepository.save(newCategory);
-    }
         public void delete(String categoryId) {
-            this.ProductCategoryRepository.deleteById(categoryId);
+            this.productCategoryRepository.deleteById(categoryId);
         }
 
-    public ProductCategory update(String categoryId, String name, String description){
-            ProductCategory Category = ProductCategoryRepository.findById(categoryId).orElse(null);
-            ProductCategory updateCategory=new ProductCategory();
-            updateCategory.setName(name);
-            updateCategory.setDesc(description);
-            return this.ProductCategoryRepository.save(updateCategory);
+    public ProductCategory update(ProductCategory updatedCategory){
+            Optional<ProductCategory> Category = this.productCategoryRepository.findById(updatedCategory.get_id());
+         if(Category.isEmpty()){
+                throw new NoSuchElementException("category is not found");
+            }
+           return this.productCategoryRepository.save(updatedCategory);
     }
      }
