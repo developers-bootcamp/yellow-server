@@ -24,8 +24,35 @@ public class OrderController {
         catch(Exception e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
-
     }
 
+    @PostMapping
+    public ResponseEntity insert(@RequestBody Orders newOrder){
+        try{
+       String orderId= orderservice.insert(newOrder);
+            return ResponseEntity.ok((orderId));
+        }
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity edit(@PathVariable String id,@RequestBody Orders currencyOrder){
+        try{
+        boolean isEdit=orderservice.edit(id,currencyOrder);
+        if(isEdit){
+            return ResponseEntity.ok(true);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("not found order");
+        }
+        }
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+
+        }
+
+    }
 }

@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -37,7 +38,20 @@ import java.util.List;
 
     }
 
+  public String  insert(Orders newOrder){
+        Orders order = OrdersRepository.insert(newOrder);
+      return  order.getId();
+  }
 
+  public boolean edit(String id,Orders currencyOrder){
+      Optional<Orders> order= OrdersRepository.findById(id);
+      if(order!=null){
+        OrdersRepository.delete(order.get());
+        OrdersRepository.insert(currencyOrder);
+        return true;
+      }
+      return false;
+  }
 
 
 
