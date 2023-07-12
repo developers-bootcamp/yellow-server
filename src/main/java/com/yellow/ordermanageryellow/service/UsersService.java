@@ -1,5 +1,5 @@
-package com.yellow.ordermanageryellow.Service;
-import com.yellow.ordermanageryellow.Dao.UserRepository;
+package com.yellow.ordermanageryellow.service;
+import com.yellow.ordermanageryellow.dao.UserRepository;
 import com.yellow.ordermanageryellow.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -14,6 +14,7 @@ public class UsersService implements CommandLineRunner {
     public UsersService(UserRepository UserRepository) {
         this.UserRepository = UserRepository;
     }
+
     @Override
     public void run(String... args) {
         Users myModel = new Users("12");

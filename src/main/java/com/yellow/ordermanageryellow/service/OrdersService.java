@@ -1,7 +1,6 @@
-package com.yellow.ordermanageryellow.Service;
+package com.yellow.ordermanageryellow.service;
 
-import com.yellow.ordermanageryellow.Dao.OrdersRepository;
-import com.yellow.ordermanageryellow.model.Company;
+import com.yellow.ordermanageryellow.dao.OrdersRepository;
 import com.yellow.ordermanageryellow.model.Orders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
