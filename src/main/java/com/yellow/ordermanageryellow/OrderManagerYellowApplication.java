@@ -8,9 +8,9 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @SpringBootApplication
 public class OrderManagerYellowApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(OrderManagerYellowApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(OrderManagerYellowApplication.class, args);
+    }
 
 }
 
