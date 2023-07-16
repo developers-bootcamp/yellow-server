@@ -1,9 +1,11 @@
 package com.yellow.ordermanageryellow.controller;
 
-import com.yellow.ordermanageryellow.Service.UsersService;
+import com.yellow.ordermanageryellow.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+@CrossOrigin("http://localhost:3000")
 
 @RestController
 @RequestMapping("/User")
