@@ -1,4 +1,4 @@
-package com.yellow.ordermanageryellow.Dao;
+package com.yellow.ordermanageryellow.dao;
 
 import com.yellow.ordermanageryellow.model.Orders;
 import com.yellow.ordermanageryellow.model.Orders.status;

@@ -1,6 +1,5 @@
-package com.yellow.ordermanageryellow.Dao;
+package com.yellow.ordermanageryellow.dao;
 
-import com.yellow.ordermanageryellow.model.Address;
 import com.yellow.ordermanageryellow.model.Company;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
