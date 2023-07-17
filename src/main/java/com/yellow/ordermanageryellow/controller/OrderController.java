@@ -1,7 +1,7 @@
 package com.yellow.ordermanageryellow.controller;
 
-import com.yellow.ordermanageryellow.Service.OrdersService;
-import com.yellow.ordermanageryellow.exception.NotValidStatusExeption;
+import com.yellow.ordermanageryellow.service.OrdersService;
+import com.yellow.ordermanageryellow.exceptions.NotValidStatusExeption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

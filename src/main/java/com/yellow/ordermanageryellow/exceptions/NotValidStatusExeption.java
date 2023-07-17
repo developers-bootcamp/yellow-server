@@ -1,4 +1,4 @@
-package com.yellow.ordermanageryellow.exception;
+package com.yellow.ordermanageryellow.exceptions;
 
 public class NotValidStatusExeption extends RuntimeException{
   public  NotValidStatusExeption(String message){

@@ -1,7 +1,7 @@
 package com.yellow.ordermanageryellow.service;
 
-import com.yellow.ordermanageryellow.Dao.OrdersRepository;
-import com.yellow.ordermanageryellow.exception.NotValidStatusExeption;
+import com.yellow.ordermanageryellow.dao.OrdersRepository;
+import com.yellow.ordermanageryellow.exceptions.NotValidStatusExeption;
 import com.yellow.ordermanageryellow.model.Orders;
 import com.yellow.ordermanageryellow.model.Orders.status;
 import org.springframework.beans.factory.annotation.Autowired;
