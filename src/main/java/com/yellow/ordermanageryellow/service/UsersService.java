@@ -8,18 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UsersService implements CommandLineRunner {
+public class UsersService  {
     private final UserRepository UserRepository;
     @Autowired
     public UsersService(UserRepository UserRepository) {
         this.UserRepository = UserRepository;
     }
 
-    @Override
-    public void run(String... args) {
-        Users myModel = new Users("12");
-        UserRepository.save(myModel);
-    }
     public  ResponseEntity<String> login(String email,String password){
       try {
           Users user = UserRepository.findUserByEmail(email);
