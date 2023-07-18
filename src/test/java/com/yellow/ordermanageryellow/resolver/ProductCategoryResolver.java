@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class ProductCategoryResolver implements ParameterResolver {
