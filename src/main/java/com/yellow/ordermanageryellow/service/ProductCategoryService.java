@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -27,7 +28,7 @@ public class ProductCategoryService {
     public ProductCategory insert(ProductCategory newCategory) throws ObjectAlreadyExistException {
         if (this.productCategoryRepository.existsByname(newCategory.getName()))
             throw new ObjectAlreadyExistException("category name already exist");
-        newCategory.setAuditData(new AuditData(LocalDate.now()));
+        newCategory.setAuditData(new AuditData(LocalDateTime.now()));
         return this.productCategoryRepository.save(newCategory);
     }
 
@@ -41,7 +42,7 @@ public class ProductCategoryService {
             throw new NoSuchElementException("category is not found");
         }
 
-        updatedCategory.setAuditData(new AuditData(Category.getAuditData().getCreateDate(), LocalDate.now()));
+        updatedCategory.setAuditData(new AuditData(Category.getAuditData().getCreateDate(), LocalDateTime.now()));
         return this.productCategoryRepository.save(updatedCategory);
     }
 }

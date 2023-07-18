@@ -4,20 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-
+@SuperBuilder(toBuilder = true)
 public class AuditData {
-    private LocalDate createDate;
-    private LocalDate updateDte;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDte;
 
-    public AuditData(LocalDate createDate) {
+    public AuditData(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 }
