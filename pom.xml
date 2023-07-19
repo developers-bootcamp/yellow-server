@@ -39,6 +39,11 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-web</artifactId>
 			</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>1.5.3.Final</version>
+		</dependency>
 			<!-- Other dependencies... -->
 
 	</dependencies>
@@ -89,6 +94,8 @@
 				</configuration>
 			</plugin>
 		</plugins>
+
+
 	</build>
 
 </project>
