@@ -17,8 +17,7 @@ import java.time.LocalDateTime;
 @SuperBuilder(toBuilder = true)
 public class AuditData {
     private LocalDateTime createDate;
-    private LocalDateTime updateDte;
-
+    private LocalDateTime updateDate;
     public AuditData(LocalDateTime createDate) {
         this.createDate = createDate;
     }

@@ -20,15 +20,13 @@ public class Users {
         this.id = id;
     }
     @Id
-    private String id;
-    private String fullName;
-    private String password;
-    private Address address;
-    @DBRef
-    private Roles roleId;
-    @DBRef
-    private Company companyId;
-    private AuditData AuditData;
-
-
+private String id;
+private String fullName;
+private String password;
+private Address address;
+@DBRef
+private Roles roleId;
+@DBRef
+private Company companyId;
+private AuditData AuditData;
 }
