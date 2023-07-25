@@ -118,38 +118,38 @@ public class UsersService  {
     @SneakyThrows
     public Users signUp(String fullName,String companyName,String email,String password){
 
-            Users user=new Users();
-            user.setFullName(fullName);
-            if(password.equals("")){
-                throw new NotValidStatusExeption("password not  valid");
-            }
-            user.setPassword(password);
-            if(!email.contains("@")){
-                throw new NotValidStatusExeption("email not valid");
-            }
-            if (userRepository.existsByAddressEmail(email)) {
-                throw new ObjectAlreadyExistException("this user allready exists");
-            }
-            Address address = new Address();
-            user.setAddress(address);
-            user.getAddress().setEmail(email);
-            user.setRoleId(rolesRepository.getByName(RoleName.ADMIN));
-            AuditData auditData = new AuditData();
-            auditData.setCreateDate(LocalDateTime.now());
-            auditData.setUpdateDate(LocalDateTime.now());
-            user.setAuditData(auditData);
-            if (companyRepository.existsByName(companyName)){
-                throw new ObjectAlreadyExistException("company already exists");
-            }
-            Company company=new Company();
-            company.setName(companyName);
-            companyRepository.save(company);
-            AuditData auditData1=new AuditData();
-            auditData1.setCreateDate(LocalDateTime.now());
-            auditData1.setUpdateDate(LocalDateTime.now());
-            company.setAuditData(auditData1);
-            user.setCompanyId(company);
-            userRepository.save(user);
-            return user;
+        Users user=new Users();
+        user.setFullName(fullName);
+        if(password.equals("")){
+            throw new NotValidStatusExeption("password not  valid");
+        }
+        user.setPassword(password);
+        if(!email.contains("@")){
+            throw new NotValidStatusExeption("email not valid");
+        }
+        if (userRepository.existsByAddressEmail(email)) {
+            throw new ObjectAlreadyExistException("this user allready exists");
+        }
+        Address address = new Address();
+        user.setAddress(address);
+        user.getAddress().setEmail(email);
+        user.setRoleId(rolesRepository.getByName(RoleName.ADMIN));
+        AuditData auditData = new AuditData();
+        auditData.setCreateDate(LocalDateTime.now());
+        auditData.setUpdateDate(LocalDateTime.now());
+        user.setAuditData(auditData);
+        if (companyRepository.existsByName(companyName)){
+            throw new ObjectAlreadyExistException("company already exists");
+        }
+        Company company=new Company();
+        company.setName(companyName);
+        companyRepository.save(company);
+        AuditData auditData1=new AuditData();
+        auditData1.setCreateDate(LocalDateTime.now());
+        auditData1.setUpdateDate(LocalDateTime.now());
+        company.setAuditData(auditData1);
+        user.setCompanyId(company);
+        userRepository.save(user);
+        return user;
     }
 }

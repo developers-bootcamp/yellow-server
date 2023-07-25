@@ -57,7 +57,7 @@ public class ProductCategoryServiceTest {
         productCategoryService.update(productCategory);
 
         Mockito.verify(productCategoryRepository, Mockito.times(1)).save(any(ProductCategory.class));
-        assertThat(date.isBefore(productCategory.getAuditData().getUpdateDte())).isTrue();
+        assertThat(date.isBefore(productCategory.getAuditData().getUpdateDate())).isTrue();
         assertThat(created.isEqual(productCategory.getAuditData().getCreateDate())).isTrue();
     }
 }

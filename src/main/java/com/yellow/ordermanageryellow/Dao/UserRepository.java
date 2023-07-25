@@ -2,7 +2,6 @@ package com.yellow.ordermanageryellow.dao;
 
 import com.yellow.ordermanageryellow.model.Users;
 import org.apache.catalina.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -13,8 +12,7 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends MongoRepository<Users, String> {
-
-   @Query("{'adress.email' : ?0}")
+	  @Query("{'adress.email' : ?0}")
    Users findUserByEmail(String email);
    @Query(value = "{'address.email': ?0}", exists = true)
    boolean existsByAddressEmail(String email);
@@ -27,5 +25,4 @@ public interface UserRepository extends MongoRepository<Users, String> {
     List<Users> findByFullNameContainingAndCompanyIdAndRoleId(String prefix, String companyId, String roleId);
 
     Page<Users> findAllByCompanyIdAndRoleId(String companyId, String roleId, Pageable pageable);
-
 }

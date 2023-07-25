@@ -45,7 +45,7 @@ public class UserController {
     @PostMapping()
     @RequestMapping("/signUp")
     public ResponseEntity<String> signUP(@RequestParam("fullName") String fullName, @RequestParam("companyName") String companyName, @RequestParam("email") String email,
-                                 @RequestParam("password") String password) {
+                                         @RequestParam("password") String password) {
         try {
             Users user =usersService.signUp(fullName,companyName,email,password);
             return ResponseEntity.ok(user.getFullName());

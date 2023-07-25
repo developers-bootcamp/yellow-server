@@ -20,7 +20,7 @@ public class ProductCategoryResolver implements ParameterResolver {
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return ProductCategory.builder().desc("unit testing")
                 .desc("unit testing is important")
-                .auditData(AuditData.builder().updateDte(LocalDateTime.now()).createDate(LocalDateTime.now()).build())
+                .auditData(AuditData.builder().updateDate(LocalDateTime.now()).createDate(LocalDateTime.now()).build())
                 .build();
     }
 }

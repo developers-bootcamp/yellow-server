@@ -1,29 +1,42 @@
 package com.yellow.ordermanageryellow.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.annotation.Collation;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-enum Discount{
-    Percentage,FixedAmount
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+enum Discount {
+    Percentage, FixedAmount
 }
-@Collation
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Document(collection = "Product")
 
 public class Product {
+    @Id
     private String id;
-
-    public Product(String id) {
-        this.id = id;
-    }
-
     private String name;
     private String desc;
     private double price;
     private Discount discount;
-    private ProductCategory categoryId;
-    private int inventory;
-    private Company companyId;
     @DBRef
+    private ProductCategory productCategoryId;
+    private int inventory;
+    @DBRef
+    private Company companyId;
     private AuditData auditData;
+
+    public Product(LocalDateTime date) {
+        this.auditData =  new AuditData(this.auditData.getCreateDate(),date);
+    }
 }

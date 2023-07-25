@@ -1,4 +1,11 @@
 package com.yellow.ordermanageryellow.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.core.annotation.Order;
+import org.springframework.data.mongodb.core.annotation.Collation;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -9,20 +16,19 @@ import java.util.List;
 
 ;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+
 @Data
 @Document(collection = "Orders")
-
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Orders {
     @Id
     private String id;
     private Users employee;
     private Users customer;
     private double totalAmount;
-    @DBRef
     private List<Order_Items> orderItems;
     private status orderStatusId;
     private Company companyId;
@@ -30,7 +36,6 @@ public class Orders {
     private LocalDate expiryOn;
     private String cvc;
     private Boolean notificationFlag;
-    @DBRef
     private AuditData auditData;
 
     public Orders(String id) {

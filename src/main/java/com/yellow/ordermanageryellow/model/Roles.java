@@ -18,8 +18,9 @@ public class Roles {
     private String id;
     private RoleName name;
     private String desc;
-    @DBRef
     private AuditData auditData;
+
+
 
 }
 
