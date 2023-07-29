@@ -1,4 +1,4 @@
-package com.yellow.ordermanageryellow.Service;
+package com.yellow.ordermanageryellow.service;
 
 
 import com.yellow.ordermanageryellow.Dto.ProductDTO;
