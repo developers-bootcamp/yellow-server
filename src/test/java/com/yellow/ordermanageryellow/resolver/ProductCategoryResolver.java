@@ -1,6 +1,7 @@
 package com.yellow.ordermanageryellow.resolver;
 
 import com.yellow.ordermanageryellow.model.AuditData;
+import com.yellow.ordermanageryellow.model.Company;
 import com.yellow.ordermanageryellow.model.ProductCategory;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -21,6 +22,7 @@ public class ProductCategoryResolver implements ParameterResolver {
         return ProductCategory.builder().desc("unit testing")
                 .desc("unit testing is important")
                 .auditData(AuditData.builder().updateDate(LocalDateTime.now()).createDate(LocalDateTime.now()).build())
+                .CompanyId(Company.builder().id("X").name("SAP").build())
                 .build();
     }
 }

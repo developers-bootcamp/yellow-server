@@ -1,5 +1,6 @@
 package com.yellow.ordermanageryellow.controller;
 
+import com.yellow.ordermanageryellow.exceptions.NoPermissionException;
 import com.yellow.ordermanageryellow.exceptions.ObjectAlreadyExistException;
 import com.yellow.ordermanageryellow.service.ProductCategoryService;
 import com.yellow.ordermanageryellow.model.ProductCategory;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
+@CrossOrigin("http://localhost:3000")
 @RestController
 @RequestMapping("/categories")
 public class ProductCategoryController {
@@ -35,39 +36,52 @@ public class ProductCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity createCategory(@RequestBody ProductCategory newCategory) {
+    public ResponseEntity createCategory(@RequestHeader("Authorization") String token,@RequestBody ProductCategory newCategory) {
         ProductCategory createdCategory;
         try {
-            createdCategory = productCategoryService.insert(newCategory);
+            createdCategory = productCategoryService.insert(newCategory,token);
             return new ResponseEntity<>(createdCategory, HttpStatus.OK);
         } catch (ObjectAlreadyExistException ex) {
             return new ResponseEntity(HttpStatus.CONFLICT);
+        } catch (NoPermissionException ex) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         } catch (Exception ex) {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity deleteCategory(@PathVariable String categoryId) {
+    public ResponseEntity deleteCategory(@RequestHeader("Authorization") String token, @PathVariable String categoryId){
         try {
-            productCategoryService.delete(categoryId);
+            productCategoryService.delete(token, categoryId);
             return new ResponseEntity(HttpStatus.OK);
         } catch (EmptyResultDataAccessException ex) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
+        } catch (NoPermissionException ex) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
         } catch (Exception ex) {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+
     @PutMapping
-    public ResponseEntity<?> updateCategory(@RequestBody ProductCategory updatedCategory) {
+    public ResponseEntity<?> updateCategory(@RequestHeader("Authorization") String token,@RequestBody ProductCategory updatedCategory) {
         try {
-            ProductCategory updateItem = productCategoryService.update(updatedCategory);
+            ProductCategory updateItem = productCategoryService.update(token,updatedCategory);
             return ResponseEntity.ok(updateItem);
         } catch (NoSuchElementException ex) {
             return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+        } catch (NoPermissionException ex) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
         } catch (Exception ex) {
             return new ResponseEntity(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    //This function has to be deleted, Just for trying the token
+    @GetMapping
+    @RequestMapping("/createToken")
+    public String createToken() {
+        return productCategoryService.fill();
     }
 }
