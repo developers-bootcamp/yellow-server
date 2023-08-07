@@ -20,6 +20,15 @@ public class OrderController {
     public OrderController(OrdersService orderservice) {
         this.orderservice = orderservice;
     }
+    @GetMapping("/{id}")
+    public ResponseEntity getOrderById( @PathVariable String id) {
+        try {
+            Orders order = orderservice.getOrderById(id);
+            return ResponseEntity.ok(order);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+    }
 
     @GetMapping("/{userId}/{status}/{pageNumber}")
     public ResponseEntity getOrders(@RequestHeader("Authorization") String token, @PathVariable String userId, @PathVariable String status, @PathVariable int pageNumber) {

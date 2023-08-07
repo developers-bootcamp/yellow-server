@@ -33,6 +33,10 @@ public class OrdersService {
     @Value("${pageSize}")
     private int pageSize;
 
+    public Orders getOrderById(String id){
+        return ordersRepository.findById(id).get();
+    }
+
     public List<Orders> getOrders(String token, String userId, String status, int pageNumber) {
 
         String companyId= this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
