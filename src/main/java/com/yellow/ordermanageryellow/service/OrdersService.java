@@ -1,9 +1,13 @@
 package com.yellow.ordermanageryellow.service;
+import com.yellow.ordermanageryellow.dao.ProductRepository;
 
 import com.yellow.ordermanageryellow.dao.OrdersRepository;
 import com.yellow.ordermanageryellow.exceptions.NotValidStatusExeption;
+import com.yellow.ordermanageryellow.model.Discount;
+import com.yellow.ordermanageryellow.model.Order_Items;
 import com.yellow.ordermanageryellow.model.Orders;
 import com.yellow.ordermanageryellow.model.Orders.status;
+import com.yellow.ordermanageryellow.model.Product;
 import com.yellow.ordermanageryellow.security.EncryptedData;
 import com.yellow.ordermanageryellow.security.JwtToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,23 +17,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
 public class OrdersService {
     @Autowired
-    private final OrdersRepository ordersRepository;
+    private  OrdersRepository ordersRepository;
     @Autowired
     private JwtToken jwtToken;
-    @Autowired
-    public OrdersService(OrdersRepository OrdersRepository) {
-        this.ordersRepository = OrdersRepository;
-    }
 
+    @Autowired
+    private ProductRepository productRepository;
     @Value("${pageSize}")
     private int pageSize;
 
@@ -70,5 +71,29 @@ public class OrdersService {
         return true;
     }
 
+    public Map<String, HashMap<Double, Integer>> calculateOrderService(@RequestParam Orders order) {
+        HashMap<String, HashMap<Double, Integer>> calculatedOrder = new HashMap<String, HashMap<Double, Integer>>();
+        double total = 0;
+        for (int i = 0; i < order.getOrderItems().stream().count(); i++) {
+            Order_Items orderItem = order.getOrderItems().get(i);
+            Optional<Product> p = productRepository.findById(orderItem.getProductId().getId());
+            HashMap<Double, Integer> o = new HashMap<Double, Integer>();
+            double sum = 0;
+            if (p.get().getDiscount() == Discount.FixedAmount) {
 
+                sum = (p.get().getPrice()- p.get().getDiscountAmount()) * order.getOrderItems().get(i).getQuantity();
+                o.put(sum, p.get().getDiscountAmount());
+
+            } else {
+                sum = (p.get().getPrice() * p.get().getDiscountAmount()) / 100 * (100 - p.get().getDiscountAmount()) * order.getOrderItems().get(i).getQuantity();
+                o.put(sum, p.get().getDiscountAmount());
+            }
+            calculatedOrder.put(p.get().getId(), o);
+            total += sum;
+        }
+        HashMap<Double, Integer> o = new HashMap<Double, Integer>();
+        o.put(total, -1);
+        calculatedOrder.put("-1", o);
+        return calculatedOrder;
+    }
 }
