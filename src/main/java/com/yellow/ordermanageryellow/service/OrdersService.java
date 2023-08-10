@@ -88,7 +88,7 @@ public class OrdersService {
                 sum = (p.get().getPrice() * p.get().getDiscountAmount()) / 100 * (100 - p.get().getDiscountAmount()) * order.getOrderItems().get(i).getQuantity();
                 o.put(sum, p.get().getDiscountAmount());
             }
-            calculatedOrder.put(p.get().getId(), o);
+            calculatedOrder.put(p.get().getName(), o);
             total += sum;
         }
         HashMap<Double, Integer> o = new HashMap<Double, Integer>();
