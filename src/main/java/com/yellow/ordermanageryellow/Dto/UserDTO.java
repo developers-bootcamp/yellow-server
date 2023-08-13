@@ -1,4 +1,4 @@
-package com.yellow.ordermanageryellow.DTO;
+package com.yellow.ordermanageryellow.Dto;
 
 import com.yellow.ordermanageryellow.model.Address;
 import lombok.*;

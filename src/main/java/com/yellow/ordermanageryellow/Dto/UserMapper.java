@@ -1,6 +1,7 @@
-package com.yellow.ordermanageryellow.DTO;
+package com.yellow.ordermanageryellow.Dto;
 
 import com.yellow.ordermanageryellow.model.Users;
+import com.yellow.ordermanageryellow.Dto.UserDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

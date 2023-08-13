@@ -12,8 +12,7 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends MongoRepository<Users, String> {
-	  @Query("{'adress.email' : ?0}")
-   Users findUserByEmail(String email);
+    Users findByAddressEmail(String email);
    @Query(value = "{'address.email': ?0}", exists = true)
    boolean existsByAddressEmail(String email);
 

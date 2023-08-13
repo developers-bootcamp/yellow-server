@@ -1,8 +1,8 @@
 package com.yellow.ordermanageryellow.service;
 import com.yellow.ordermanageryellow.dao.CompanyRepository;
 import com.yellow.ordermanageryellow.dao.RolesRepository;
-import com.yellow.ordermanageryellow.DTO.UserDTO;
-import com.yellow.ordermanageryellow.DTO.UserMapper;
+import com.yellow.ordermanageryellow.Dto.UserDTO;
+import com.yellow.ordermanageryellow.Dto.UserMapper;
 import com.yellow.ordermanageryellow.dao.RolesRepository;
 import com.yellow.ordermanageryellow.dao.UserRepository;
 import com.yellow.ordermanageryellow.exceptions.NotValidStatusExeption;
@@ -56,7 +56,7 @@ public class UsersService  {
 
     @SneakyThrows
     public String login(String email, String password) {
-        Users user = UserRepository.findUserByEmail(email);
+        Users user = UserRepository.findByAddressEmail(email);
         if (user == null)
             throw new NotFoundException("user not exist");
         else if (!user.getPassword().equals(password))
@@ -73,17 +73,8 @@ public class UsersService  {
             throw new ObjectExistException("user is already exist");
     }
 
-//    public String generateToken(Users user) {
-//        return user.getCompanyId() + "&" + user.getId() + "&" + user.getRoleId();
-//    }
-
-//    public String[] getToken(String token) {
-//        String[] tokenS = token.split("&");
-//        return tokenS;
-//    }
-
     public boolean findUser(Users user) {
-        Users foundUser = UserRepository.findUserByEmail(user.getAddress().getEmail());
+        Users foundUser = UserRepository.findByAddressEmail(user.getAddress().getEmail());
         if (foundUser == null)
             return false;
         return true;
