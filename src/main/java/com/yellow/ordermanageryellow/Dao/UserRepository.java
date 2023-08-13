@@ -1,4 +1,4 @@
-package com.yellow.ordermanageryellow.dao;
+package com.yellow.ordermanageryellow.Dao;
 
 import com.yellow.ordermanageryellow.model.Users;
 import org.apache.catalina.User;

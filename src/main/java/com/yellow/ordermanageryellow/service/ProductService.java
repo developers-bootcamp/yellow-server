@@ -2,11 +2,11 @@ package com.yellow.ordermanageryellow.service;
 
 
 import com.yellow.ordermanageryellow.service.ProductMapper;
-import com.yellow.ordermanageryellow.dao.ProductRepository;
+import com.yellow.ordermanageryellow.Dao.ProductRepository;
 import com.yellow.ordermanageryellow.Dto.ProductDTO;
 import com.yellow.ordermanageryellow.Dto.ProductNameDTO;
 import com.yellow.ordermanageryellow.Exception.ObjectAllReadyExists;
-import com.yellow.ordermanageryellow.dao.RolesRepository;
+import com.yellow.ordermanageryellow.Dao.RolesRepository;
 import com.yellow.ordermanageryellow.exceptions.NoPermissionException;
 import com.yellow.ordermanageryellow.exceptions.ObjectAlreadyExistException;
 import com.yellow.ordermanageryellow.model.*;

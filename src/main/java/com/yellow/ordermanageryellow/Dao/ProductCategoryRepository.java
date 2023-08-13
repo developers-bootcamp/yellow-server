@@ -1,4 +1,4 @@
-package com.yellow.ordermanageryellow.dao;
+package com.yellow.ordermanageryellow.Dao;
 
 import com.yellow.ordermanageryellow.model.Product;
 import com.yellow.ordermanageryellow.model.ProductCategory;

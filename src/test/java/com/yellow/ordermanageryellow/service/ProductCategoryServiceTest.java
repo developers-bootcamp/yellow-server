@@ -1,7 +1,7 @@
 package com.yellow.ordermanageryellow.service;
 
-import com.yellow.ordermanageryellow.dao.ProductCategoryRepository;
-import com.yellow.ordermanageryellow.dao.RolesRepository;
+import com.yellow.ordermanageryellow.Dao.ProductCategoryRepository;
+import com.yellow.ordermanageryellow.Dao.RolesRepository;
 import com.yellow.ordermanageryellow.exceptions.ObjectAlreadyExistException;
 import com.yellow.ordermanageryellow.model.ProductCategory;
 import com.yellow.ordermanageryellow.model.RoleNames;
