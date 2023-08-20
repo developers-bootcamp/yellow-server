@@ -67,7 +67,7 @@ public class UsersService  {
 
 
     @SneakyThrows
-    public Users createNewUser(Users newUser,String token) {
+    public Users createNewUser(Users newUser) {
         if (!findUser(newUser)) {
             return UserRepository.save(newUser);
         } else
@@ -130,7 +130,7 @@ public class UsersService  {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         String roleId= this.jwtToken.decryptToken(token, EncryptedData.ROLE);
         String companyId= this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
-        Page<Users> users = UserRepository.findAllByCompanyIdAndRoleId(companyId, roleId, pageable);
+        Page<Users> users = UserRepository.findAllByCompanyId(companyId,pageable);
         return users.map(userMapper::usersToUserDTO).getContent();
     }
     @SneakyThrows

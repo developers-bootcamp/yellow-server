@@ -75,9 +75,9 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> createNewUser(@RequestBody Users newUser, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> createNewUser(@RequestBody Users newUser ){
         try {
-            usersService.createNewUser(newUser, token);
+            usersService.createNewUser(newUser);
         }catch (NoPermissionException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         } catch (ObjectExistException e) {

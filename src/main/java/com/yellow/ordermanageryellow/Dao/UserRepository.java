@@ -23,5 +23,5 @@ public interface UserRepository extends MongoRepository<Users, String> {
     @Query("{'fullName': {$regex: ?0, $options: 'i'}, 'companyId': ?1, 'roleId': ?2}")
     List<Users> findByFullNameContainingAndCompanyIdAndRoleId(String prefix, String companyId, String roleId);
 
-    Page<Users> findAllByCompanyIdAndRoleId(String companyId, String roleId, Pageable pageable);
+    Page<Users> findAllByCompanyId(String companyId, Pageable pageable);
 }
