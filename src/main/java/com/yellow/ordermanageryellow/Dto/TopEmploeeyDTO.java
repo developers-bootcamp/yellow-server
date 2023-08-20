@@ -3,8 +3,18 @@ package com.yellow.ordermanageryellow.Dto;
 
 import com.yellow.ordermanageryellow.model.Users;
 
-public class TopEmploeeyDTO {
+import java.io.Serializable;
 
-    private Users employee;
-    private Integer countOfDeliveredOrders;
+public class TopEmploeeyDTO implements Serializable {
+
+    //private Users employee;
+    private Long countOfDeliveredOrders;
+
+//    public void setEmployee(Users employee) {
+//        this.employee = employee;
+//    }
+
+    public void setCountOfDeliveredOrders(Long countOfDeliveredOrders) {
+        this.countOfDeliveredOrders = countOfDeliveredOrders;
+    }
 }
