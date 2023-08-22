@@ -8,7 +8,7 @@ import com.yellow.ordermanageryellow.Dao.UserRepository;
 import com.yellow.ordermanageryellow.exceptions.NotValidStatusExeption;
 import com.yellow.ordermanageryellow.exceptions.ObjectAlreadyExistException;
 import com.yellow.ordermanageryellow.model.*;
-import com.yellow.ordermanageryellow.security.PasswordValidator;
+//import com.yellow.ordermanageryellow.security.PasswordValidator;
 import lombok.SneakyThrows;
 import com.yellow.ordermanageryellow.exception.NotFoundException;
 import com.yellow.ordermanageryellow.exception.ObjectExistException;
@@ -134,13 +134,13 @@ public class UsersService  {
         return users.map(userMapper::usersToUserDTO).getContent();
     }
     @SneakyThrows
-    public Users signUp(String fullName,String companyName,String email,String password){
+    public Users signUp(String fullName,String companyName,String email,String password,Currency currency){
 
         Users user=new Users();
         user.setFullName(fullName);
-        if(PasswordValidator.isValidPassword(password)){
-            throw new NotValidStatusExeption("password not  valid");
-        }
+//        if(PasswordValidator.isValidPassword(password)){
+//            throw new NotValidStatusExeption("password not  valid");
+//        }
         user.setPassword(password);
         if(!email.contains("@")){
             throw new NotValidStatusExeption("email not valid");
@@ -166,6 +166,7 @@ public class UsersService  {
         auditData1.setCreateDate(LocalDateTime.now());
         auditData1.setUpdateDate(LocalDateTime.now());
         company.setAuditData(auditData1);
+        company.setCurrency(currency);
         user.setCompanyId(company);
         userRepository.save(user);
         return user;

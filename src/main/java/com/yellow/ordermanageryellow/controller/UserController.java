@@ -2,6 +2,7 @@ package com.yellow.ordermanageryellow.controller;
 
 import com.yellow.ordermanageryellow.exceptions.NotValidStatusExeption;
 import com.yellow.ordermanageryellow.exceptions.ObjectAlreadyExistException;
+import com.yellow.ordermanageryellow.model.Currency;
 import com.yellow.ordermanageryellow.model.Users;
 import com.yellow.ordermanageryellow.Dto.UserDTO;
 import com.yellow.ordermanageryellow.Dto.UserMapper;
@@ -47,9 +48,9 @@ public class UserController {
     @PostMapping()
     @RequestMapping("/signUp")
     public ResponseEntity<String> signUP(@RequestParam("fullName") String fullName, @RequestParam("companyName") String companyName, @RequestParam("email") String email,
-                                         @RequestParam("password") String password) {
+                                         @RequestParam("password") String password,@RequestParam("currency") Currency currency) {
         try {
-            Users user =usersService.signUp(fullName,companyName,email,password);
+            Users user =usersService.signUp(fullName,companyName,email,password,currency);
             return ResponseEntity.ok(user.getFullName());
 
         }catch (NotValidStatusExeption ex) {

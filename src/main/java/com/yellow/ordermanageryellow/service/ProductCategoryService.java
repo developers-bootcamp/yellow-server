@@ -87,7 +87,7 @@ public class ProductCategoryService {
     //This function has to be deleted, Just for trying the token
     public String fill() {
         AuditData d = new AuditData(LocalDateTime.now(), LocalDateTime.now());
-        Company c = new Company("7", "AAAAAAAAA", "55", d);
+        Company c = new Company("7", "AAAAAAAAA", Currency.EURO, d);
         companyRepository.save(c);
         Roles roles = new Roles("2", RoleNames.ADMIN, "cust", d);
         rolesRepository.save(roles);

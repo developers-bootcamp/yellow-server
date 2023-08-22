@@ -18,6 +18,6 @@ public class Company {
     @Id
     private String id;
     private String name;
-    private String currency;
+    private Currency currency;
     private AuditData auditData;
 }
