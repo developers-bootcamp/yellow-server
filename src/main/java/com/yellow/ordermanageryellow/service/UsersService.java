@@ -128,16 +128,10 @@ public class UsersService  {
     @SneakyThrows
     public List<UserDTO> getUsers(int pageNumber,String token) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-<<<<<<< HEAD:src/main/java/com/yellow/ordermanageryellow/Service/UsersService.java
-        //company and role will be taken from token
-        Page<Users> users = UserRepository.findAllByCompanyIdAndRoleId("1", "1", pageable);
-            return users.map(userMapper::usersToUserDTO).getContent();
-=======
         String roleId= this.jwtToken.decryptToken(token, EncryptedData.ROLE);
         String companyId= this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
         Page<Users> users = UserRepository.findAllByCompanyId(companyId,pageable);
         return users.map(userMapper::usersToUserDTO).getContent();
->>>>>>> main:src/main/java/com/yellow/ordermanageryellow/service/UsersService.java
     }
     @SneakyThrows
     public Users signUp(String fullName,String companyName,String email,String password,Currency currency){

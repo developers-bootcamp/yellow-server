@@ -1,8 +1,8 @@
-package com.yellow.ordermanageryellow.Service;
+package com.yellow.ordermanageryellow.service;
 
 import com.yellow.ordermanageryellow.Dto.ProductDTO;
-import com.yellow.ordermanageryellow.dao.OrdersRepository;
-import com.yellow.ordermanageryellow.dao.ProductRepository;
+import com.yellow.ordermanageryellow.Dao.OrdersRepository;
+import com.yellow.ordermanageryellow.Dao.ProductRepository;
 
 import com.yellow.ordermanageryellow.exceptions.NotValidStatusExeption;
 import com.yellow.ordermanageryellow.model.Discount;
@@ -39,14 +39,12 @@ public class OrdersService {
 
     @Value("${pageSize}")
     private int pageSize;
-
     public Orders getOrderById(String id){
         return ordersRepository.findById(id).get();
     }
 
-    public List<Orders> getOrders(String token, String userId, String status, int pageNumber) {
-
-        String companyId= this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
+    public List<Orders> getOrders(String token, String userId, Orders.status status, int pageNumber) {
+        String companyId = token;
         Sort.Order sortOrder = Sort.Order.asc("auditData.updateDate");
         Sort sort = Sort.by(sortOrder);
         Pageable pageable = PageRequest.of(pageNumber, pageSize/* pageSize parameter omitted */, sort);
@@ -55,7 +53,7 @@ public class OrdersService {
     }
 
     public String insert(Orders newOrder) {
-        if (newOrder.getOrderStatusId() != status.New || newOrder.getOrderStatusId() != status.approved) {
+        if (newOrder.getOrderStatusId() != status.New && newOrder.getOrderStatusId() != status.approved) {
             throw new NotValidStatusExeption("Order should be in status new or approve");
         }
         Orders order = ordersRepository.insert(newOrder);
@@ -63,7 +61,7 @@ public class OrdersService {
     }
 
     public boolean edit(Orders currencyOrder) {
-        if (currencyOrder.getOrderStatusId() != status.cancelled || currencyOrder.getOrderStatusId() != status.approved) {
+        if (currencyOrder.getOrderStatusId() != status.cancelled && currencyOrder.getOrderStatusId() != status.approved) {
             throw new NotValidStatusExeption("You can only approve or cancel an order");
         }
         Optional<Orders> order = ordersRepository.findById(currencyOrder.getId());
