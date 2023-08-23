@@ -20,8 +20,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Roles {
     @Id
     private String id;
-    private RoleNames name;
+    private RoleName name;
     private String desc;
     private AuditData auditData;
+
+
+
 }
 

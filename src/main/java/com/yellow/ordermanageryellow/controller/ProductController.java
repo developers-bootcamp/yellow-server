@@ -21,7 +21,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity addProduct(@RequestBody Product product, @RequestHeader("Authorization") String token)  {
-      Product createdProduct;
+        Product createdProduct;
         try{
             createdProduct=   productService.addProduct(product,token);
             return new ResponseEntity<>(createdProduct, HttpStatus.OK);

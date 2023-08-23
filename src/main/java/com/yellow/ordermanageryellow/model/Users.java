@@ -17,11 +17,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "Users")
-public class Users implements Serializable {
-    public Users(String id) {
-        this.id = id;
-    }
-    @Id
+public class Users{
+
+@Id
 private String id;
 private String fullName;
 private String password;
@@ -31,4 +29,7 @@ private Roles roleId;
 @DBRef
 private Company companyId;
 private AuditData AuditData;
+public Users(String id) {
+        this.id = id;
+    }
 }

@@ -33,11 +33,14 @@ public class Orders {
     private status orderStatusId;
     private Company companyId;
     private long creditCardNumber;
-    private LocalDate expiryOn;
+    private String expiryOn;
     private String cvc;
     private Boolean notificationFlag;
     private AuditData auditData;
 
+    public Orders(String id) {
+        this.id = id;
+    }
 
     public enum status {New, cancelled, approved, charging, packing, delivered}
 }
