@@ -13,7 +13,6 @@ public class OrderManagerYellowApplication {
 		SpringApplication.run(OrderManagerYellowApplication.class, args);
 
 	}
-
 }
 
 

@@ -2,7 +2,6 @@ package com.yellow.ordermanageryellow.controller;
 
 import com.yellow.ordermanageryellow.exceptions.NoPermissionException;
 import com.yellow.ordermanageryellow.exceptions.ObjectAlreadyExistException;
-import com.yellow.ordermanageryellow.service.ProductCategoryService;
 import com.yellow.ordermanageryellow.model.ProductCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;

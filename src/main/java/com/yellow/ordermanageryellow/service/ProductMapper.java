@@ -2,6 +2,7 @@ package com.yellow.ordermanageryellow.service;
 
 
 import com.yellow.ordermanageryellow.Dto.ProductDTO;
+import com.yellow.ordermanageryellow.Dto.ProductDiscauntDTO;
 import com.yellow.ordermanageryellow.Dto.ProductNameDTO;
 import com.yellow.ordermanageryellow.model.Product;
 import org.mapstruct.Mapper;
@@ -24,6 +25,9 @@ public interface ProductMapper {
     public List<ProductDTO> productToDto(List<Product> list);
 
     public List<Product> dtoToProduct(List<ProductDTO> list);
+    public List<ProductDiscauntDTO> ProductToProductDiscauntDTO(List<Product> list);
+
+    public List<Product> ProductDiscauntDTOToProduct(List< ProductDiscauntDTO> list);
 
     public ProductNameDTO ProductToProductNameDTO(Product product);
 

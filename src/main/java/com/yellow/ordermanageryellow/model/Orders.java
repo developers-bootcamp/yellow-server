@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDate;
 import java.util.List;
 
-;
+
 
 
 @Data
@@ -26,11 +26,17 @@ import java.util.List;
 public class Orders {
     @Id
     private String id;
+    @DBRef
     private Users employee;
+    @DBRef
     private Users customer;
     private double totalAmount;
+
+
+    @DBRef
     private List<Order_Items> orderItems;
     private status orderStatusId;
+    @DBRef
     private Company companyId;
     private long creditCardNumber;
     private String expiryOn;
@@ -41,6 +47,7 @@ public class Orders {
     public Orders(String id) {
         this.id = id;
     }
+
 
     public enum status {New, cancelled, approved, charging, packing, delivered}
 }
