@@ -31,9 +31,6 @@ public class Orders {
     @DBRef
     private Users customer;
     private double totalAmount;
-
-
-    @DBRef
     private List<Order_Items> orderItems;
     private status orderStatusId;
     @DBRef

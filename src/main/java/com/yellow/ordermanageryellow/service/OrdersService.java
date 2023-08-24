@@ -1,5 +1,7 @@
 package com.yellow.ordermanageryellow.service;
 
+import com.yellow.ordermanageryellow.Dto.OrderDTO;
+import com.yellow.ordermanageryellow.Dto.OrderMapper;
 import com.yellow.ordermanageryellow.Dto.ProductDTO;
 import com.yellow.ordermanageryellow.Dao.OrdersRepository;
 import com.yellow.ordermanageryellow.Dao.ProductRepository;
@@ -36,6 +38,8 @@ public class OrdersService {
     private JwtToken jwtToken;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ChargingService chargingService=new ChargingService();
 
     @Value("${pageSize}")
     private int pageSize;
@@ -52,13 +56,15 @@ public class OrdersService {
         return pageOrders.getContent();
     }
 
-    public String insert(Orders newOrder) {
-        if (newOrder.getOrderStatusId() != status.New && newOrder.getOrderStatusId() != status.approved) {
-            throw new NotValidStatusExeption("Order should be in status new or approve");
+       public String insert(Orders newOrder) {
+            if (newOrder.getOrderStatusId() != status.New && newOrder.getOrderStatusId() != status.approved) {
+                throw new NotValidStatusExeption("Order should be in status new or approve");
+            }
+            Orders order = ordersRepository.insert(newOrder);
+         if(newOrder.getOrderStatusId() == status.approved)
+            chargingService.chargingStep(order);
+            return order.getId();
         }
-        Orders order = ordersRepository.insert(newOrder);
-        return order.getId();
-    }
 
     public boolean edit(Orders currencyOrder) {
         if (currencyOrder.getOrderStatusId() != status.cancelled && currencyOrder.getOrderStatusId() != status.approved) {
@@ -71,6 +77,8 @@ public class OrdersService {
         if (order.get().getOrderStatusId() != status.New || order.get().getOrderStatusId() != status.packing) {
             throw new NotValidStatusExeption("It is not possible to change an order that is not in status new or packaging");
         }
+        if(order.get().getOrderStatusId() == status.approved)
+            chargingService.chargingStep(order.get());
        ordersRepository.save(currencyOrder);
         return true;
     }

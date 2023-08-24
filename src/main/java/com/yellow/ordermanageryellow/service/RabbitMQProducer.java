@@ -18,9 +18,8 @@ public class RabbitMQProducer {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-
     public void sendMessage(OrderDTO o){
-        LOGGER.info(String.format("message sent: ",o.toString()));
+        LOGGER.info(String.format("message sent: %s ",o.toString()));
         rabbitTemplate.convertAndSend(exchange,routingKey,o);
     }
 }
