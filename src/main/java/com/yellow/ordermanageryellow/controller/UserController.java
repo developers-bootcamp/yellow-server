@@ -9,14 +9,14 @@ import com.yellow.ordermanageryellow.Dto.UserMapper;
 import com.yellow.ordermanageryellow.exceptions.NoPermissionException;
 import com.yellow.ordermanageryellow.service.UsersService;
 import com.yellow.ordermanageryellow.model.Users;
-import com.yellow.ordermanageryellow.exception.NotFoundException;
-import com.yellow.ordermanageryellow.exception.ObjectExistException;
+import com.yellow.ordermanageryellow.Exception.NotFoundException;
+import com.yellow.ordermanageryellow.Exception.ObjectExistException;
 import com.yellow.ordermanageryellow.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.yellow.ordermanageryellow.Exception.WrongPasswordException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,6 +41,8 @@ public class UserController {
             return ResponseEntity.ok().body(usersService.login(email, password));
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (WrongPasswordException e) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("The password provided is incorrect");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
@@ -58,7 +60,6 @@ public class UserController {
 
         }catch (ObjectAlreadyExistException ex) {
             return  ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-
         }
         catch (Exception ex) {
             return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("something went wrong please try later  "+ex.getMessage());

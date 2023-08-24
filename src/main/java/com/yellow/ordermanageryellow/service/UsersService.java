@@ -3,16 +3,15 @@ import com.yellow.ordermanageryellow.Dao.CompanyRepository;
 import com.yellow.ordermanageryellow.Dao.RolesRepository;
 import com.yellow.ordermanageryellow.Dto.UserDTO;
 import com.yellow.ordermanageryellow.Dto.UserMapper;
-import com.yellow.ordermanageryellow.Dao.RolesRepository;
 import com.yellow.ordermanageryellow.Dao.UserRepository;
 import com.yellow.ordermanageryellow.exceptions.NotValidStatusExeption;
 import com.yellow.ordermanageryellow.exceptions.ObjectAlreadyExistException;
 import com.yellow.ordermanageryellow.model.*;
 //import com.yellow.ordermanageryellow.security.PasswordValidator;
 import lombok.SneakyThrows;
-import com.yellow.ordermanageryellow.exception.NotFoundException;
-import com.yellow.ordermanageryellow.exception.ObjectExistException;
-import com.yellow.ordermanageryellow.exception.WrongPasswordException;
+import com.yellow.ordermanageryellow.Exception.NotFoundException;
+import com.yellow.ordermanageryellow.Exception.ObjectExistException;
+import com.yellow.ordermanageryellow.Exception.WrongPasswordException;
 import com.yellow.ordermanageryellow.exceptions.NoPermissionException;
 import com.yellow.ordermanageryellow.model.ProductCategory;
 import com.yellow.ordermanageryellow.model.RoleName;
@@ -20,22 +19,19 @@ import com.yellow.ordermanageryellow.model.Roles;
 import com.yellow.ordermanageryellow.model.Users;
 import com.yellow.ordermanageryellow.security.EncryptedData;
 import com.yellow.ordermanageryellow.security.JwtToken;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.NoSuchElementException;
-
 
 @Service
 public class UsersService  {
-
     @Autowired
     private JwtToken jwtToken;
     @Autowired
@@ -44,7 +40,7 @@ public class UsersService  {
     private UserRepository UserRepository;
     @Autowired
     private  UserMapper userMapper;
-
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Value("${pageSize}")
     private int pageSize;
 
@@ -52,20 +48,21 @@ public class UsersService  {
     private  UserRepository userRepository;
     @Autowired
     private  CompanyRepository companyRepository;
-
-
+    public UsersService() {
+        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    }
 
     @SneakyThrows
     public String login(String email, String password) {
         Users user = UserRepository.findByAddressEmail(email);
         if (user == null)
             throw new NotFoundException("user not exist");
-        else if (!user.getPassword().equals(password))
+        if (bCryptPasswordEncoder.matches(password,user.getPassword())) {
+            return this.jwtToken.generateToken(user);
+        } else {
             throw new WrongPasswordException("invalid password");
-        else return this.jwtToken.generateToken(user);
+        }
     }
-
-
     @SneakyThrows
     public Users createNewUser(Users newUser) {
         if (!findUser(newUser)) {
@@ -138,10 +135,11 @@ public class UsersService  {
 
         Users user=new Users();
         user.setFullName(fullName);
-//        if(PasswordValidator.isValidPassword(password)){
-//            throw new NotValidStatusExeption("password not  valid");
-//        }
-        user.setPassword(password);
+        if(password.equals("")){
+            throw new NotValidStatusExeption("password not  valid");
+        }
+        String hashedPassword = bCryptPasswordEncoder.encode(password);
+        user.setPassword(hashedPassword);
         if(!email.contains("@")){
             throw new NotValidStatusExeption("email not valid");
         }

@@ -18,8 +18,6 @@ public interface UserRepository extends MongoRepository<Users, String> {
 
    User getByAddressEmail(String email);
 
-    
-
     @Query("{'fullName': {$regex: ?0, $options: 'i'}, 'companyId': ?1, 'roleId': ?2}")
     List<Users> findByFullNameContainingAndCompanyIdAndRoleId(String prefix, String companyId, String roleId);
 

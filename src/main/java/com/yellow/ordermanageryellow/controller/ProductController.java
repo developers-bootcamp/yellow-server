@@ -1,5 +1,6 @@
 package com.yellow.ordermanageryellow.controller;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.yellow.ordermanageryellow.Exception.ObjectAllReadyExists;
 import com.yellow.ordermanageryellow.exceptions.NoPermissionException;
 import com.yellow.ordermanageryellow.service.ProductService;
@@ -9,7 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.client.HttpClientErrorException;
 import java.util.NoSuchElementException;
 @CrossOrigin(origins = "http://localhost:3000")
 
@@ -23,10 +24,13 @@ public class ProductController {
     public ResponseEntity addProduct(@RequestBody Product product, @RequestHeader("Authorization") String token)  {
         Product createdProduct;
         try{
-            createdProduct=   productService.addProduct(product,token);
+            createdProduct=  productService.addProduct(product,token);
             return new ResponseEntity<>(createdProduct, HttpStatus.OK);
-        }
-        catch (ObjectAllReadyExists e){
+    }catch (TokenExpiredException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }catch (NoPermissionException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }catch (ObjectAllReadyExists e){
             return  ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
 
@@ -59,8 +63,9 @@ public class ProductController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         } catch (ObjectAllReadyExists e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }catch (NoPermissionException e){
+        }catch (NoPermissionException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
