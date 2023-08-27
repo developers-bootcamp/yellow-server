@@ -27,15 +27,17 @@ public class OrderController {
     }
 
 
-    @GetMapping("/{userId}/{status}/{pageNumber}")
-    public ResponseEntity getOrders(@RequestHeader String token, @PathVariable String userId, @PathVariable Orders.status status, @PathVariable int pageNumber) {
+    @GetMapping("/{orderStatusId}/{pageNumber}")
+    public ResponseEntity getOrders(@RequestHeader("Authorization") String token,  @PathVariable List <String> orderStatusId, @PathVariable int pageNumber) {
         try {
-            List<Orders> orders = orderservice.getOrders(token, userId, status, pageNumber);
+            System.out.print("CON");
+            List<Orders> orders = orderservice.getOrders(token, orderStatusId, pageNumber);
             return ResponseEntity.ok(orders);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
+
 
     @PostMapping
     public ResponseEntity insert(@RequestBody Orders newOrder) {
