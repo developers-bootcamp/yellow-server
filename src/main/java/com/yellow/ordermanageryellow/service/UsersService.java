@@ -135,8 +135,8 @@ public class UsersService  {
 
         Users user=new Users();
         user.setFullName(fullName);
-        if(password.equals("")){
-            throw new NotValidStatusExeption("password not  valid");
+        if(password.equals(" ")){
+            throw new NotValidStatusExeption("password not valid");
         }
         String hashedPassword = bCryptPasswordEncoder.encode(password);
         user.setPassword(hashedPassword);
