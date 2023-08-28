@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
 @CrossOrigin(origins = "http://localhost:3000")
 
 @RequestMapping("/order")
-public class OrderController {
+public class  OrderController {
     private final OrdersService orderservice;
 
     @Autowired
