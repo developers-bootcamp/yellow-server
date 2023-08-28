@@ -34,7 +34,7 @@ public class Orders {
     private List<Order_Items> orderItems;
     private status orderStatusId;
     @DBRef
-    private Company companyId;
+    private Company company;
     private long creditCardNumber;
     private String expiryOn;
     private String cvc;

@@ -51,13 +51,25 @@ public class OrdersService {
         return ordersRepository.findById(id).get();
     }
 
-    public List<Orders> getOrders(String token, String userId, Orders.status status, int pageNumber) {
-        String companyId = token;
-        Sort.Order sortOrder = Sort.Order.asc("auditData.updateDate");
-        Sort sort = Sort.by(sortOrder);
-        Pageable pageable = PageRequest.of(pageNumber, pageSize/* pageSize parameter omitted */, sort);
-        Page<Orders> pageOrders = ordersRepository.findByCompanyId_IdAndOrderStatusIdAndEmployee(companyId, status, userId, pageable);
-        return pageOrders.getContent();
+    public List<Orders> getOrders(String token, List <String> orderStatusId, int pageNumber) {
+        System.out.print("getOrders");
+        System.out.print(token);
+        System.out.print(orderStatusId);
+        System.out.print(pageNumber);
+        String companyId= this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
+        //Sort.Order sortOrder = Sort.Order.asc("auditData.updateDate");
+        //String companyId="64dbb3f095f36c150987e7e0";
+        //  Sort sort = Sort.by(sortOrder);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize/* pageSize parameter omitted */);
+        // Pageable pageable = PageRequest.of(pageNumber, pageSize/* pageSize parameter omitted */, sort);
+        try {
+            List<Orders> pageOrders = ordersRepository.findByOrderStatusIdInAndCompanyId( pageable, orderStatusId,companyId);
+            System.out.print(pageOrders);
+            return pageOrders;
+        }catch (Exception err){
+            System.out.print("stop");
+        }
+        return null;
     }
 
        public String insert(Orders newOrder) {

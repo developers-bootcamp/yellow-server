@@ -1,4 +1,5 @@
 package com.yellow.ordermanageryellow.service;
+
 import com.yellow.ordermanageryellow.Dao.CompanyRepository;
 import com.yellow.ordermanageryellow.Dao.RolesRepository;
 import com.yellow.ordermanageryellow.Dto.UserDTO;
@@ -8,6 +9,7 @@ import com.yellow.ordermanageryellow.exceptions.NotValidStatusExeption;
 import com.yellow.ordermanageryellow.exceptions.ObjectAlreadyExistException;
 import com.yellow.ordermanageryellow.model.*;
 //import com.yellow.ordermanageryellow.security.PasswordValidator;
+import com.yellow.ordermanageryellow.model.Currency;
 import lombok.SneakyThrows;
 import com.yellow.ordermanageryellow.Exception.NotFoundException;
 import com.yellow.ordermanageryellow.Exception.ObjectExistException;
@@ -26,12 +28,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 @Service
-public class UsersService  {
+public class UsersService {
+
     @Autowired
     private JwtToken jwtToken;
     @Autowired
@@ -46,7 +52,7 @@ public class UsersService  {
     private int pageSize;
 
     @Autowired
-    private  UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
     private  CompanyRepository companyRepository;
     public UsersService() {
@@ -54,35 +60,42 @@ public class UsersService  {
     }
 
     @SneakyThrows
-    public String login(String email, String password) {
+    public Map<String, Object> login(String email, String password) {
         Users user = UserRepository.findByAddressEmail(email);
         if (user == null)
             throw new NotFoundException("user not exist");
         if (bCryptPasswordEncoder.matches(password,user.getPassword())) {
-            return this.jwtToken.generateToken(user);
+              Map<String, Object> result = new HashMap<>();
+            result.put("token", this.jwtToken.generateToken(user));
+            result.put("role", user.getRoleId().getName());
+            return result;
         } else {
             throw new WrongPasswordException("invalid password");
         }
     }
     @SneakyThrows
-    public Users createNewUser(Users newUser) {
-        if (!findUser(newUser)) {
-            return UserRepository.save(newUser);
+    public Users createNewUser(UserDTO newUser, String token) {
+        Users user = createUser(newUser);
+        String company = this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
+        Optional<Company> userCompany = companyRepository.findById(company);
+        user.setCompanyId(userCompany.get());
+        if (!findUser(user, company)) {
+            return UserRepository.save(user);
         } else
             throw new ObjectExistException("user is already exist");
     }
 
-    public boolean findUser(Users user) {
+    public boolean findUser(Users user, String company) {
         Users foundUser = UserRepository.findByAddressEmail(user.getAddress().getEmail());
-        if (foundUser == null)
+        if (foundUser == null || !foundUser.getCompanyId().getId().equals(company))
             return false;
         return true;
     }
 
     @SneakyThrows
-    public void deleteUser(String id,String token) {
-        String role= this.jwtToken.decryptToken(token, EncryptedData.ROLE);
-        String company= this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
+    public void deleteUser(String id, String token) {
+        String role = this.jwtToken.decryptToken(token, EncryptedData.ROLE);
+        String company = this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
         Users userFromDB = this.UserRepository.findById(id).orElse(null);
         if (userFromDB == null) {
             throw new NotFoundException("user is not found");
@@ -96,13 +109,17 @@ public class UsersService  {
     }
 
     @SneakyThrows
-    public Users updateUser(Users user, String token) throws NoPermissionException {
-        String role= this.jwtToken.decryptToken(token, EncryptedData.ROLE);
-        String company= this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
+    public Users updateUser(UserDTO u, String token) throws NoPermissionException {
+        Users user = createUser(u);
+
+        String role = this.jwtToken.decryptToken(token, EncryptedData.ROLE);
+        String company = this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
+
         Users userFromDB = this.UserRepository.findById(user.getId()).orElse(null);
         if (userFromDB == null) {
             throw new NotFoundException("user is not found");
         }
+        user.setCompanyId(userFromDB.getCompanyId());
         String companyOfCategory = userFromDB.getCompanyId().getId();
         Roles wholeRole = rolesRepository.findById(role).orElse(null);
         if( !wholeRole.getName().equals(RoleName.ADMIN)|| !company.equals(companyOfCategory)){
@@ -112,9 +129,9 @@ public class UsersService  {
     }
 
     @SneakyThrows
-    public HashMap<String, String> getCustomerByNames(String prefix,String token) {
-        String roleId= this.jwtToken.decryptToken(token, EncryptedData.ROLE);
-        String companyId= this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
+    public HashMap<String, String> getCustomerByNames(String prefix, String token) {
+        String roleId = this.jwtToken.decryptToken(token, EncryptedData.ROLE);
+        String companyId = this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
         List<Users> users = UserRepository.findByFullNameContainingAndCompanyIdAndRoleId(prefix, companyId, roleId);
         HashMap<String, String> userMap = new HashMap<>();
         for (Users user : users) {
@@ -124,17 +141,30 @@ public class UsersService  {
     }
 
     @SneakyThrows
-    public List<UserDTO> getUsers(int pageNumber,String token) {
+    public List<UserDTO> getUsers(String token) {
+        String roleId = this.jwtToken.decryptToken(token, EncryptedData.ROLE);
+        String companyId = this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
+        List<Users> users = UserRepository.findAllByCompanyId(companyId);
+
+        List<UserDTO> userDTOs = users.stream()
+                .map(userMapper::usersToUserDTO)
+                .collect(Collectors.toList());
+        return userDTOs;
+    }
+
+    @SneakyThrows
+    public List<UserDTO> getUsersByRole(int pageNumber, String role, String token) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        String roleId= this.jwtToken.decryptToken(token, EncryptedData.ROLE);
-        String companyId= this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
-        Page<Users> users = UserRepository.findAllByCompanyId(companyId,pageable);
+        Roles roleObj = rolesRepository.getByName(RoleName.valueOf(role));
+        String companyId = this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
+        Page<Users> users = UserRepository.findAllByCompanyIdAndRoleId(companyId, roleObj.getId(), pageable);
         return users.map(userMapper::usersToUserDTO).getContent();
     }
-    @SneakyThrows
-    public Users signUp(String fullName,String companyName,String email,String password,Currency currency){
 
-        Users user=new Users();
+    @SneakyThrows
+    public Users signUp(String fullName, String companyName, String email, String password, Currency currency) {
+
+        Users user = new Users();
         user.setFullName(fullName);
         if(password.equals(" ")){
             throw new NotValidStatusExeption("password not valid");
@@ -155,19 +185,36 @@ public class UsersService  {
         auditData.setCreateDate(LocalDateTime.now());
         auditData.setUpdateDate(LocalDateTime.now());
         user.setAuditData(auditData);
-        if (companyRepository.existsByName(companyName)){
+        if (companyRepository.existsByName(companyName)) {
             throw new ObjectAlreadyExistException("company already exists");
         }
-        Company company=new Company();
+        Company company = new Company();
         company.setName(companyName);
         companyRepository.save(company);
-        AuditData auditData1=new AuditData();
+        AuditData auditData1 = new AuditData();
         auditData1.setCreateDate(LocalDateTime.now());
         auditData1.setUpdateDate(LocalDateTime.now());
         company.setAuditData(auditData1);
         company.setCurrency(currency);
         user.setCompanyId(company);
         userRepository.save(user);
+        return user;
+    }
+
+    public Users createUser(UserDTO u) {
+        Address address = new Address();
+        address.setAddress(u.getAddress());
+        address.setEmail(u.getEmail());
+        address.setTelephone(u.getTelephone());
+
+        Users user = new Users();
+        user.setId(u.getId());
+        user.setFullName(u.getFullName());
+        user.setPassword(u.getPassword());
+        user.setAddress(address);
+
+        Roles userRole = rolesRepository.getByName(RoleName.valueOf(u.getRole()));
+        user.setRoleId(userRole);
         return user;
     }
 }
