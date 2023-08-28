@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import com.yellow.ordermanageryellow.Exception.WrongPasswordException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String password, @RequestParam String email) {
+    public ResponseEntity login(@RequestParam String password, @RequestParam String email) {
         try {
             return ResponseEntity.ok().body(usersService.login(email, password));
         } catch (NotFoundException e) {
@@ -47,6 +48,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
     @PostMapping()
     @RequestMapping("/signUp")
     public ResponseEntity<String> signUP(@RequestParam("fullName") String fullName, @RequestParam("companyName") String companyName, @RequestParam("email") String email,
@@ -55,7 +57,7 @@ public class UserController {
             Users user =usersService.signUp(fullName,companyName,email,password,currency);
             return ResponseEntity.ok(user.getFullName());
 
-        }catch (NotValidStatusExeption ex) {
+        } catch (NotValidStatusExeption ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 
         }catch (ObjectAlreadyExistException ex) {
@@ -66,7 +68,8 @@ public class UserController {
         }
 
     }
-    public ResponseEntity<String> login(@RequestParam String password, @RequestParam String email, @RequestHeader String token) {
+
+    public ResponseEntity login(@RequestParam String password, @RequestParam String email, @RequestHeader String token) {
         try {
             return ResponseEntity.ok().body(usersService.login(email, password));
         } catch (NotFoundException e) {
@@ -77,10 +80,10 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> createNewUser(@RequestBody Users newUser ){
+    public ResponseEntity<String> createNewUser(@RequestBody UserDTO newUser, @RequestHeader("Authorization") String token) {
         try {
-            usersService.createNewUser(newUser);
-        }catch (NoPermissionException e){
+            usersService.createNewUser(newUser, token);
+        } catch (NoPermissionException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         } catch (ObjectExistException e) {
             return ResponseEntity.status(HttpStatus.CREATED).body(e.getMessage());
@@ -91,10 +94,10 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable String id,@RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> deleteUser(@PathVariable String id, @RequestHeader("Authorization") String token) {
         try {
-            usersService.deleteUser(id,token);
-        }catch (NoPermissionException e){
+            usersService.deleteUser(id, token);
+        } catch (NoPermissionException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -105,9 +108,9 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity updateUser(@RequestBody Users user, @RequestHeader("Authorization") String token) {
+    public ResponseEntity updateUser(@RequestBody UserDTO user, @RequestHeader("Authorization") String token) {
         try {
-            usersService.updateUser(user,token);
+            usersService.updateUser(user, token);
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -117,11 +120,22 @@ public class UserController {
 
     }
 
-    @GetMapping("/{pageNumber}")
-    public ResponseEntity getAllUsers(@PathVariable int pageNumber, @RequestHeader("Authorization") String token) {
+    @GetMapping()
+    public ResponseEntity getAllUsers(@RequestHeader("Authorization") String token) {
         List<UserDTO> customers;
         try {
-            customers = usersService.getUsers(pageNumber,token);
+            customers = usersService.getUsers(token);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(customers);
+    }
+
+    @GetMapping("/{role}/{pageNumber}")
+    public ResponseEntity getAllUsersByRole(@PathVariable int pageNumber, @PathVariable String role, @RequestHeader("Authorization") String token) {
+        List<UserDTO> customers;
+        try {
+            customers = usersService.getUsersByRole(pageNumber, role, token);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
         }
@@ -131,7 +145,7 @@ public class UserController {
     @GetMapping("/customersNames")
     public ResponseEntity<HashMap<String, String>> getCustomersByPrefix(@RequestParam String prefix, @RequestHeader("Authorization") String token) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(usersService.getCustomerByNames(prefix,token));
+            return ResponseEntity.status(HttpStatus.OK).body(usersService.getCustomerByNames(prefix, token));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
