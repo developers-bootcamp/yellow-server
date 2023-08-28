@@ -12,6 +12,7 @@ import com.yellow.ordermanageryellow.model.Users;
 import com.yellow.ordermanageryellow.Exception.NotFoundException;
 import com.yellow.ordermanageryellow.Exception.ObjectExistException;
 import com.yellow.ordermanageryellow.model.Users;
+import com.yellow.ordermanageryellow.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
