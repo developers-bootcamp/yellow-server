@@ -115,6 +115,7 @@ public class GraphService {
         AggregateIterable<Document> result = aggregationTopSoldProduct();
         List<TopProductDTO> topProductsList = new ArrayList<>();
         for (Document document : result) {
+            System.out.println(result);
             int monthInt = document.getInteger("month");
             Month monthEnum = Month.of(monthInt);
             TopProductDTO TopProductDTO = new TopProductDTO();
