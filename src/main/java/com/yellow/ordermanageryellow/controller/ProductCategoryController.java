@@ -31,7 +31,7 @@ public class ProductCategoryController {
             categories = productCategoryService.findAll();
             return new ResponseEntity<>(categories, HttpStatus.OK);
         } catch (Exception ex) {
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

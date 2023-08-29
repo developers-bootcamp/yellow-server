@@ -6,6 +6,7 @@ import com.yellow.ordermanageryellow.Dto.OrderDTO;
 import com.yellow.ordermanageryellow.Dto.OrderMapper;
 import com.yellow.ordermanageryellow.model.Order_Items;
 import com.yellow.ordermanageryellow.model.Orders;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,38 +20,36 @@ public class ChargingService {
     private RabbitMQProducer rabbitMQProducer;
 
     public void chargingStep(Orders order) {
-        Orders orderFromMongo=ordersRepository.findById(order.getId()).orElse(null);
-        try{
+        Orders orderFromMongo = ordersRepository.findById(order.getId()).orElse(null);
+        try {
             orderFromMongo.setOrderStatusId(Orders.status.charging);
-            for (Order_Items item:orderFromMongo.getOrderItems())
-            {
-                if(item.getProductId().getInventory()<item.getQuantity()){
+            for (Order_Items item : orderFromMongo.getOrderItems()) {
+                if (item.getProductId().getInventory() < item.getQuantity()) {
                     orderFromMongo.setOrderStatusId(Orders.status.cancelled);
                     ordersRepository.save(orderFromMongo);
                     return;
+                } else {
+                    item.getProductId().setInventory((int) (item.getProductId().getInventory() - item.getQuantity()));
+                    productRepository.save(item.getProductId());
                 }
-                 else{
-                    item.getProductId().setInventory((int)(item.getProductId().getInventory()-item.getQuantity()));
-                     productRepository.save(item.getProductId());
-                 }
             }
             OrderDTO orderDTO = OrderMapper.INSTANCE.orderToOrderDTO(orderFromMongo);
             rabbitMQProducer.sendMessage(orderDTO);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
     }
-    public void CompletedPayment(OrderDTO orderDTO) {
+    public void CompletedPayment(@NotNull OrderDTO orderDTO) {
         Orders order=ordersRepository.findById(orderDTO.getOrderId()).orElse(null);
-        if(order.getOrderStatusId().equals(Orders.status.approved))
+        if(orderDTO.getOrderStatusId()==Orders.status.charging)
             order.setOrderStatusId(Orders.status.packing);
         else {
             order.setOrderStatusId(Orders.status.cancelled);
-            for (Order_Items item:order.getOrderItems())
+            for (Order_Items item:order.getOrderItems()){
                 item.getProductId().setInventory((int)(item.getProductId().getInventory()+item.getQuantity()));
+                 productRepository.save(item.getProductId());}
+                }
+                ordersRepository.save(order);
+            }
         }
-        ordersRepository.save(order);
-    }
-}

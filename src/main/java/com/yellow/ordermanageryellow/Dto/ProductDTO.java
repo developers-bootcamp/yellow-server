@@ -19,6 +19,8 @@ public class ProductDTO {
     private double price;
     private String productCategoryId;
     private int inventory;
+    private Discount discount;
+    private int discountAmount;
 
 
 }

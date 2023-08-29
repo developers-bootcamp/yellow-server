@@ -162,7 +162,7 @@ public class UsersService {
     }
 
     @SneakyThrows
-    public Users signUp(String fullName, String companyName, String email, String password, Currency currency) {
+    public Map<String, Object> signUp(String fullName, String companyName, String email, String password, Currency currency) {
 
         Users user = new Users();
         user.setFullName(fullName);
@@ -198,7 +198,10 @@ public class UsersService {
         company.setCurrency(currency);
         user.setCompanyId(company);
         userRepository.save(user);
-        return user;
+        Map<String, Object> result = new HashMap<>();
+        result.put("token", this.jwtToken.generateToken(user));
+        result.put("role", user.getRoleId().getName());
+        return result;
     }
 
     public Users createUser(UserDTO u) {
@@ -217,4 +220,5 @@ public class UsersService {
         user.setRoleId(userRole);
         return user;
     }
+
 }

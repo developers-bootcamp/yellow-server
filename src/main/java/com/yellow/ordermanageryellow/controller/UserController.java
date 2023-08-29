@@ -52,11 +52,10 @@ public class UserController {
 
     @PostMapping()
     @RequestMapping("/signUp")
-    public ResponseEntity<String> signUP(@RequestParam("fullName") String fullName, @RequestParam("companyName") String companyName, @RequestParam("email") String email,
+    public ResponseEntity signUP(@RequestParam("fullName") String fullName, @RequestParam("companyName") String companyName, @RequestParam("email") String email,
                                          @RequestParam("password") String password,@RequestParam("currency") Currency currency) {
         try {
-            Users user =usersService.signUp(fullName,companyName,email,password,currency);
-            return ResponseEntity.ok(user.getFullName());
+            return ResponseEntity.ok(usersService.signUp(fullName,companyName,email,password,currency));
 
         } catch (NotValidStatusExeption ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
