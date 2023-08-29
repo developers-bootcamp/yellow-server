@@ -40,6 +40,7 @@ public class Orders {
     private String cvc;
     private Boolean notificationFlag;
     private AuditData auditData;
+    private Currency currency;
 
     public Orders(String id) {
         this.id = id;

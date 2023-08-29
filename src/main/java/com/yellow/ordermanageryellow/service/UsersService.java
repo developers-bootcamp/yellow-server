@@ -46,6 +46,7 @@ public class UsersService {
     private UserRepository UserRepository;
     @Autowired
     private  UserMapper userMapper;
+
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Value("${pageSize}")
     private int pageSize;
