@@ -31,7 +31,7 @@ public class ChargingService {
                 }
                  else{
                     item.getProductId().setInventory((int)(item.getProductId().getInventory()-item.getQuantity()));
-                     productRepository.save(item.getProductId());
+                    productRepository.save(item.getProductId());
                  }
             }
             OrderDTO orderDTO = OrderMapper.INSTANCE.orderToOrderDTO(orderFromMongo);

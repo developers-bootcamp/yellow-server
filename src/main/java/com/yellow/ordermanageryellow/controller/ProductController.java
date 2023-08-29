@@ -78,6 +78,8 @@ public class ProductController {
             return ResponseEntity.ok().build();
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
+        } catch (NoPermissionException ex) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

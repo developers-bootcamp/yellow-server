@@ -21,7 +21,7 @@ public class Product {
     private String desc;
     private double price;
     private Discount discount;
-    private  int discountAmount;
+    private int discountAmount;
     @DBRef
     private ProductCategory productCategoryId;
     private int inventory;
