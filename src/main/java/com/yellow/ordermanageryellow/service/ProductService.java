@@ -13,6 +13,8 @@ import com.yellow.ordermanageryellow.security.JwtToken;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -92,6 +94,14 @@ public class ProductService {
         List<ProductDTO> productDTOs = ProductMapper.INSTANCE.productToDto(products);
         return productDTOs;
     }
-
+//    public List<Product> getAllProductByCompany(@RequestHeader("Authorization") String token) {
+//        String company= this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
+//        List<Product> products = productRepository.findAllByCompanyId(companyId);
+//        List<Users> users = UserRepository.findAllByCompanyId(companyId);
+//
+//        if (products == null)
+//            throw new NoSuchElementException("no content");
+//        return products;
+//    }
 }
 

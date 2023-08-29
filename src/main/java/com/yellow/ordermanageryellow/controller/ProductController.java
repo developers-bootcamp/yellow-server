@@ -53,7 +53,15 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-
+//    @RequestMapping("/byCompany")
+//    @GetMapping
+//    public ResponseEntity getAllProductByCompany( @RequestHeader("Authorization") String token) {
+//        try {
+//            return ResponseEntity.status(HttpStatus.OK).body(productService.getAllProductByCompany(token));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//        }
+//    }
     @PutMapping
     public ResponseEntity editProduct(@RequestBody Product product,@RequestHeader("Authorization") String token) {
         try {
