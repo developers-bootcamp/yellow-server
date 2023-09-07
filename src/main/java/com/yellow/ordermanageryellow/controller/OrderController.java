@@ -48,9 +48,9 @@ public class  OrderController {
 
 
     @PostMapping
-    public ResponseEntity insert(@RequestBody Orders newOrder) {
+    public ResponseEntity insert(@RequestHeader("Authorization") String token,@RequestBody Orders newOrder) {
         try {
-            String orderId = orderservice.insert(newOrder);
+            String orderId = orderservice.insert(newOrder,token);
             return ResponseEntity.ok((orderId));
         } catch (NotValidStatusExeption ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());

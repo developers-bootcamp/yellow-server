@@ -11,11 +11,8 @@ import com.yellow.ordermanageryellow.Dao.OrdersRepository;
 import com.yellow.ordermanageryellow.Dao.ProductRepository;
 
 import com.yellow.ordermanageryellow.exceptions.NotValidStatusExeption;
-import com.yellow.ordermanageryellow.model.Discount;
-import com.yellow.ordermanageryellow.model.Order_Items;
-import com.yellow.ordermanageryellow.model.Orders;
+import com.yellow.ordermanageryellow.model.*;
 import com.yellow.ordermanageryellow.model.Orders.status;
-import com.yellow.ordermanageryellow.model.Product;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,6 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -75,12 +73,18 @@ public class OrdersService {
         return null;
     }
 
-    public String insert(Orders newOrder) {
+    public String insert(Orders newOrder,String token) {
         if (newOrder.getOrderStatusId() != status.New && newOrder.getOrderStatusId() != status.approved) {
             throw new NotValidStatusExeption("Order should be in status new or approve");
         }
+        String companyId = this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
+        Company company = companyRepository.findById(companyId).get();
+        AuditData auditData = new AuditData();
+        auditData.setCreateDate(LocalDateTime.now());
+        newOrder.setCompany(company);
+        newOrder.setAuditData(auditData);
         Orders order = ordersRepository.insert(newOrder);
-        if(newOrder.getOrderStatusId() == status.approved)
+        if (newOrder.getOrderStatusId() == status.approved)
             chargingService.chargingStep(order);
         return order.getId();
     }
@@ -93,7 +97,7 @@ public class OrdersService {
         if (order.isEmpty()) {
             throw new NoSuchElementException();
         }
-        if (order.get().getOrderStatusId() != status.New || order.get().getOrderStatusId() != status.packing) {
+        if (order.get().getOrderStatusId() != status.New && order.get().getOrderStatusId() != status.packing) {
             throw new NotValidStatusExeption("It is not possible to change an order that is not in status new or packaging");
         }
         if(order.get().getOrderStatusId() == status.approved)

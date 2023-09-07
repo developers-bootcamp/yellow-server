@@ -76,6 +76,8 @@ public class UsersService {
     @SneakyThrows
     public Users createNewUser(UserDTO newUser, String token) {
         Users user = createUser(newUser);
+        String hashedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
         String company = this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
         Optional<Company> userCompany = companyRepository.findById(company);
         user.setCompanyId(userCompany.get());

@@ -84,4 +84,11 @@ public class ProductCategoryController {
     public String createToken() {
         return productCategoryService.fill();
     }
-}
+@GetMapping("/{pageNumber}")
+public ResponseEntity getAllcategoriesPaginationt(@PathVariable int pageNumber,@RequestHeader("Authorization") String token) {
+    try {
+        return ResponseEntity.status(HttpStatus.OK).body(productCategoryService.getCategoriesPagination(pageNumber,token));
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+}}

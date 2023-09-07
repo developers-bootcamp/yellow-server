@@ -12,6 +12,9 @@ import com.yellow.ordermanageryellow.security.EncryptedData;
 import com.yellow.ordermanageryellow.security.JwtToken;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -100,6 +103,13 @@ public class ProductService {
         if (products == null)
             throw new NoSuchElementException("no content");
         return products;
+    }
+    @SneakyThrows
+    public List<Product> getProductsPaginatin(int pageNumber, String token) {
+        Pageable pageable = PageRequest.of(pageNumber, 3);
+        String companyId = this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
+        Page<Product> Products = productRepository.findByCompanyIdId(companyId, pageable);
+        return Products.getContent();
     }
 }
 

@@ -15,6 +15,9 @@ import com.yellow.ordermanageryellow.model.AuditData;
 
 import com.yellow.ordermanageryellow.model.ProductCategory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -99,5 +102,12 @@ public class ProductCategoryService {
         ProductCategory productCategory1 = new ProductCategory("90", "Happy", "coffee", c, d);
         productCategoryRepository.save(productCategory1);
         return jwtToken.generateToken(user);
+    }
+    @SneakyThrows
+    public List<ProductCategory> getCategoriesPagination(int pageNumber, String token) {
+        Pageable pageable = PageRequest.of(pageNumber, 3);
+        String companyId = this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
+        Page<ProductCategory> categories = productCategoryRepository.findByCompanyIdId(companyId, pageable);
+        return categories.getContent();
     }
 }
