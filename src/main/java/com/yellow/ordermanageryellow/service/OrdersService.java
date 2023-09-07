@@ -74,7 +74,7 @@ public class OrdersService {
     }
 
     public String insert(Orders newOrder,String token) {
-        if (newOrder.getOrderStatusId() != status.New && newOrder.getOrderStatusId() != status.approved) {
+        if (newOrder.getOrderStatusId() != status.New && newOrder.getOrderStatusId() != status.Approved) {
             throw new NotValidStatusExeption("Order should be in status new or approve");
         }
         String companyId = this.jwtToken.decryptToken(token, EncryptedData.COMPANY);
@@ -84,23 +84,23 @@ public class OrdersService {
         newOrder.setCompany(company);
         newOrder.setAuditData(auditData);
         Orders order = ordersRepository.insert(newOrder);
-        if (newOrder.getOrderStatusId() == status.approved)
+        if (newOrder.getOrderStatusId() == status.Approved)
             chargingService.chargingStep(order);
         return order.getId();
     }
 
     public boolean edit(Orders currencyOrder) {
-        if (currencyOrder.getOrderStatusId() != status.cancelled && currencyOrder.getOrderStatusId() != status.approved) {
+        if (currencyOrder.getOrderStatusId() != status.Cancelled && currencyOrder.getOrderStatusId() != status.Approved) {
             throw new NotValidStatusExeption("You can only approve or cancel an order");
         }
         Optional<Orders> order = ordersRepository.findById(currencyOrder.getId());
         if (order.isEmpty()) {
             throw new NoSuchElementException();
         }
-        if (order.get().getOrderStatusId() != status.New && order.get().getOrderStatusId() != status.packing) {
+        if (order.get().getOrderStatusId() != status.New && order.get().getOrderStatusId() != status.Packing) {
             throw new NotValidStatusExeption("It is not possible to change an order that is not in status new or packaging");
         }
-        if(order.get().getOrderStatusId() == status.approved)
+        if(order.get().getOrderStatusId() == status.Approved)
             chargingService.chargingStep(order.get());
         ordersRepository.save(currencyOrder);
         return true;

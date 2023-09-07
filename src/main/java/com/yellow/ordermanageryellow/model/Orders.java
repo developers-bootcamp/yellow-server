@@ -47,5 +47,5 @@ public class Orders {
     }
 
 
-    public enum status {New, cancelled, approved, charging, packing, delivered}
+    public enum status {New, Cancelled, Approved, Charging, Packing, Delivered}
 }
