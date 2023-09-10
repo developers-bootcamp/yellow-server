@@ -122,8 +122,8 @@ public class GraphService {
             List<ProductAmountDto> ListProductAmountDto = new ArrayList<>();
             for (Document product : products) {
                 String productName = product.getString("product");
-                //Double totalQuantity = product.getDouble("totalQuantity");
-                Integer totalQuantity = product.getInteger("totalQuantity");
+                Double totalQuantity = product.getDouble("totalQuantity");
+               // Integer totalQuantity = product.getInteger("totalQuantity");
                 ProductAmountDto productAmountDto = new ProductAmountDto();
                 productAmountDto.setProductName(productName);
                 productAmountDto.setAmount(totalQuantity);
@@ -147,11 +147,11 @@ public class GraphService {
                         .andExpression("month(auditData.createDate)").as("month")
                         .and("orderStatusId").as("orderStatusId"),
                 group("month")
-                        .sum(ConditionalOperators.when(ComparisonOperators.valueOf("orderStatusId").equalToValue("Cancelled")).then(1).otherwise(0)).as("Cancelled").sum(ConditionalOperators.when(ComparisonOperators.valueOf("orderStatusId").equalToValue("Delivered")).then(1).otherwise(0)).as("Delivered"),
+                        .sum(ConditionalOperators.when(ComparisonOperators.valueOf("orderStatusId").equalToValue("Cancelled")).then(1).otherwise(0)).as("Cancelled").sum(ConditionalOperators.when(ComparisonOperators.valueOf("orderStatusId").equalToValue("Approved")).then(1).otherwise(0)).as("Approved"),
                 project()
                         .and("_id").as("month")
                         .and("Cancelled").as("Cancelled")
-                        .and("Delivered").as("Dlivered")
+                        .and("Approved").as("Approved")
         );
         AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, "Orders", Document.class);
         List<Document> mappedResults = results.getMappedResults();
@@ -160,7 +160,7 @@ public class GraphService {
         for (Document mappedResult : mappedResults) {
             Month month = Month.of(mappedResult.getInteger("month"));
             int Cancelled = mappedResult.getInteger("Cancelled", 0);
-            int Delivered = mappedResult.getInteger("Delivered", 0);
+            int Delivered = mappedResult.getInteger("Approved", 0);
             Map<Integer, Integer> tempMap = new HashMap<>();
             tempMap.put(Cancelled, Delivered);
             resultMap.put(month, tempMap);
