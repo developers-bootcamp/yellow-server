@@ -17,6 +17,6 @@ public class ProductCategory {
     private String name;
     private String desc;
     @DBRef
-    private Company CompanyId;
+    private Company companyId;
     private AuditData auditData;
 }

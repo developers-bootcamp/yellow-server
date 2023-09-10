@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class ProductAmountDto {
     private String productName;
-    private Integer amount;
+    private double amount;
 }
