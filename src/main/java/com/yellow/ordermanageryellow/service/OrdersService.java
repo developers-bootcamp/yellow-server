@@ -105,7 +105,7 @@ public class OrdersService {
         ordersRepository.save(currencyOrder);
         return true;
     }
-    public Map<String, HashMap<Double, Integer>> calculateOrderService(@RequestParam Orders order) {
+    public Map<String, HashMap<Double, Integer>> calculateOrderService(@RequestParam @NotNull Orders order) {
         HashMap<String, HashMap<Double, Integer>> calculatedOrder = new HashMap<String, HashMap<Double, Integer>>();
         double total = 0;
         String currencyOfOrder = order.getCurrency().toString();
